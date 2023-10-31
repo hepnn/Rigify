@@ -17,6 +17,7 @@ class GridItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
+        color: color ?? Theme.of(context).cardColor,
         elevation: 3,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),

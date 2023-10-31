@@ -134,7 +134,9 @@ class _StopsPageState extends State<StopsPage> {
                       child: Text(
                         stop.name!,
                         style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.normal),
+                          fontSize: 18,
+                          fontWeight: FontWeight.normal,
+                        ),
                       ),
                     ),
                   ),

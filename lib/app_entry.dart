@@ -30,31 +30,30 @@ class _AppEntryState extends State<AppEntry> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
+      body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: SizedBox(
         height: 66,
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
+        child: NavigationBar(
+          destinations: const [
+            NavigationDestination(
               icon: FaIcon(FontAwesomeIcons.heart),
               label: '',
             ),
-            BottomNavigationBarItem(
-              icon: FaIcon(FontAwesomeIcons.search),
+            NavigationDestination(
+              icon: FaIcon(FontAwesomeIcons.home),
               label: '',
             ),
-            BottomNavigationBarItem(
+            NavigationDestination(
               icon: FaIcon(FontAwesomeIcons.newspaper),
               label: '',
             ),
           ],
-          currentIndex: _selectedIndex,
-          selectedItemColor:
-              Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
-          onTap: _onItemTapped,
+          selectedIndex: _selectedIndex,
+          onDestinationSelected: (index) => setState(() {
+            _selectedIndex = index;
+          }),
         ),
       ),
-      body: _widgetOptions.elementAt(_selectedIndex),
     );
   }
 }

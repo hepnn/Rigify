@@ -5,6 +5,7 @@ import 'package:rigify/app/bus_data/stop.dart';
 import 'package:rigify/app/bus_data/utils/parse_routes_data.dart';
 import 'package:rigify/app/bus_data/utils/utils.dart';
 import 'package:rigify/app/trip_page/trip_page.dart';
+import 'package:rigify/main.dart';
 
 class _TimePageState extends State<TimePage>
     with SingleTickerProviderStateMixin {
@@ -21,6 +22,7 @@ class _TimePageState extends State<TimePage>
   List<String?> _weekdays = [];
 
   bool found = false;
+  bool _isFavorite = false;
 
   @override
   void initState() {
@@ -56,8 +58,8 @@ class _TimePageState extends State<TimePage>
         updateScroll(_weekdays[_tabController!.index]);
       });
 
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => updateScroll(_weekdays[selected]));
+    // WidgetsBinding.instance
+    //     .addPostFrameCallback((_) => updateScroll(_weekdays[selected]));
     super.initState();
   }
 
@@ -133,7 +135,7 @@ class _TimePageState extends State<TimePage>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _route!.name!,
+                    _route.name!,
                     style: const TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                   Text(_stop!.name!),
@@ -141,6 +143,29 @@ class _TimePageState extends State<TimePage>
               ),
             ],
           ),
+          actions: [
+            IconButton(
+              icon: Icon(
+                  favoriteStopsBox.containsKey(_stop.name)
+                      ? Icons.favorite
+                      : Icons.favorite_outline,
+                  color: Colors.white),
+              onPressed: () async {
+                final stop = StopType(
+                  stopName: _stop.name,
+                  route: _route,
+                );
+                setState(() {
+                  _isFavorite = !_isFavorite;
+                  if (_isFavorite) {
+                    favoriteStopsBox.put(_stop.name, stop);
+                  } else {
+                    favoriteStopsBox.delete(_stop.name);
+                  }
+                });
+              },
+            ),
+          ],
         ),
         body: TabBarView(
           controller: _tabController,

@@ -15,6 +15,7 @@ import 'package:logging/logging.dart';
 import 'package:rigify/ads/ads_controller.dart';
 import 'package:rigify/app/bus_data/data_api.dart';
 import 'package:rigify/app/bus_data/route.dart';
+import 'package:rigify/app/bus_data/stop.dart';
 import 'package:rigify/app_entry.dart';
 import 'package:rigify/in_app_purchases/ad_removal_state.gen.dart';
 import 'package:rigify/in_app_purchases/in_app_purchase.dart';
@@ -29,6 +30,15 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  RequestConfiguration configuration = RequestConfiguration(
+    tagForChildDirectedTreatment: TagForChildDirectedTreatment.unspecified,
+    testDeviceIds: <String>[
+      "F23F3343D59DEB57DD157610A53894A8",
+    ],
+  );
+
+  MobileAds.instance.updateRequestConfiguration(configuration);
 
   // Pass all uncaught errors from the Flutter framework to Crashlytics
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
@@ -57,7 +67,9 @@ void guardedMain() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Hive.initFlutter();
   Hive.registerAdapter(RouteTypeAdapter());
+  Hive.registerAdapter(StopTypeAdapter());
   await Hive.openBox<RouteType>('favorites');
+  await Hive.openBox<StopType>('favoriteStops');
   await Hive.openBox<RouteType>('recentRoutes');
   await Hive.openBox('prefs');
 
@@ -71,6 +83,8 @@ void guardedMain() async {
 }
 
 final Box<RouteType> favoritesBox = Hive.box<RouteType>('favorites');
+
+final Box<StopType> favoriteStopsBox = Hive.box<StopType>('favoriteStops');
 
 Logger _log = Logger('main.dart');
 

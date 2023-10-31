@@ -4,7 +4,7 @@
     "bus": "Bus",
     "tramway": "Tramway",
     "trolleybus": "Trolleybus",
-    "favRoutesTitle": "Favourite routes",
+    "favRoutesTitle": "Favourites",
     "favRoutesEmpty": "No favourites",
     "favRoutesInfo": "Long press on route or press heart icon to add to favourites",
     "recentPageInfo": "Your recently opened routes will be shown here",

@@ -200,7 +200,6 @@ class _HomePageState extends ConsumerState<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // RecentRoutesScreen(),
                   GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -235,14 +234,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                         },
                       );
                     },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 32.0),
-                    child: Text(
-                      lang.nearestStopsTitle,
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
                   ),
                 ],
               ),
