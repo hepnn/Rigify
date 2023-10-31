@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:rigify/app/setting_page/language/language_page.dart';
+import 'package:rigify/app/setting_page/widgets/language_picker.dart';
 import 'package:rigify/app/setting_page/widgets/theme_card.dart';
 import 'package:rigify/main.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -20,14 +20,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          title: Text(lang.settingsTitle)),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(lang.settingsTitle),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListView(
           children: [
-            _buildLanguageSelect(),
+            const _LanguageSelectionRow(),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
@@ -35,194 +36,163 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
-            _buildThemeSelect(),
-            _buildContactDev(),
-            _buildRemoveAds(),
+            const ThemeCard(),
+            const _ContactDevRow(),
+            const _RemoveAdsRow(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LanguageSelectionRow extends StatelessWidget {
+  const _LanguageSelectionRow();
+
+  @override
+  Widget build(BuildContext context) {
+    final lang = AppLocalizations.of(context)!;
+
+    return Card(
+      elevation: 8,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            _SettingsLine(
+              lang.settingsLang,
+              child: const LanguageSelector(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ContactDevRow extends StatelessWidget {
+  const _ContactDevRow();
+
+  @override
+  Widget build(BuildContext context) {
+    final lang = AppLocalizations.of(context)!;
+
+    return Card(
+      elevation: 8,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            _SettingsLine(
+              lang.supportTitle,
+              child: SizedBox(
+                height: 50,
+                width: 200,
+                child: Card(
+                  elevation: 2,
+                  child: Center(
+                    child: TextButton(
+                      child: const Text(
+                        'martinssvdev@gmail.com',
+                      ),
+                      onPressed: () {
+                        _composeMail();
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildThemeSelect() {
-    return Consumer(
-      builder: (context, ref, child) {
-        return Column(
+  String? encodeQueryParameters(Map<String, String> params) {
+    return params.entries
+        .map((MapEntry<String, String> e) =>
+            '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+        .join('&');
+  }
+
+  void _composeMail() {
+// #docregion encode-query-parameters
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: 'martinssvdev@gmail.com',
+      query: encodeQueryParameters(<String, String>{
+        'subject': '[Rigify] Feedback',
+      }),
+    );
+
+    launchUrl(emailLaunchUri);
+// #enddocregion encode-query-parameters
+  }
+}
+
+class _RemoveAdsRow extends ConsumerWidget {
+  const _RemoveAdsRow();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final lang = AppLocalizations.of(context)!;
+
+    if (inAppPurchaseControllerProvider == null) {
+      return const SizedBox.shrink();
+    }
+
+    Widget icon;
+    VoidCallback? callback;
+
+    if (inAppPurchaseControllerProvider != null
+        ? ref.watch(inAppPurchaseControllerProvider!).maybeMap(
+              active: (value) => true,
+              orElse: () => false,
+            )
+        : false) {
+      icon = const Text('❤️');
+    } else if (inAppPurchaseControllerProvider != null
+        ? ref.watch(inAppPurchaseControllerProvider!).maybeMap(
+              pending: (value) => true,
+              orElse: () => false,
+            )
+        : false) {
+      icon = const CircularProgressIndicator();
+    } else {
+      icon = const Text(
+        '1.79€',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      );
+      callback = () {
+        if (inAppPurchaseControllerProvider != null) {
+          ref.read(inAppPurchaseControllerProvider!.notifier).buy();
+        }
+      };
+    }
+    return Card(
+      elevation: 8,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
           children: [
-            GridView.count(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              crossAxisCount: 3,
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 8,
-              childAspectRatio: 1.75 / 1,
-              padding: EdgeInsets.zero,
-              children: const <ThemeCard>[
-                ThemeCard(
-                  mode: ThemeMode.system,
-                  icon: Icons.contrast,
+            _SettingsLine(
+              lang.removeAdsTitle,
+              onSelected: callback,
+              child: SizedBox(
+                height: 50,
+                width: 100,
+                child: Card(
+                  elevation: 2,
+                  child: Center(child: icon),
                 ),
-                ThemeCard(
-                  mode: ThemeMode.light,
-                  icon: Icons.sunny,
-                ),
-                ThemeCard(
-                  mode: ThemeMode.dark,
-                  icon: Icons.nightlight_round,
-                ),
-              ],
+              ),
             ),
           ],
-        );
-      },
+        ),
+      ),
     );
   }
-
-  Widget _buildLanguageSelect() {
-    final lang = AppLocalizations.of(context)!;
-
-    return Card(
-        elevation: 8,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              _SettingsLine(
-                lang.settingsLang,
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_forward),
-                  onPressed: () {
-                    Navigator.of(context, rootNavigator: true).push(
-                        PageRouteBuilder(
-                            transitionDuration: Duration.zero,
-                            pageBuilder: (context, animation1, animation2) =>
-                                const LanguagePicker()));
-                  },
-                ),
-              ),
-            ],
-          ),
-        ));
-  }
-}
-
-String? encodeQueryParameters(Map<String, String> params) {
-  return params.entries
-      .map((MapEntry<String, String> e) =>
-          '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
-      .join('&');
-}
-
-void _composeMail() {
-// #docregion encode-query-parameters
-  final Uri emailLaunchUri = Uri(
-    scheme: 'mailto',
-    path: 'martinssvdev@gmail.com',
-    query: encodeQueryParameters(<String, String>{
-      'subject': '[Rigify] Feedback',
-    }),
-  );
-
-  launchUrl(emailLaunchUri);
-// #enddocregion encode-query-parameters
-}
-
-Widget _buildContactDev() {
-  return Consumer(builder: (context, ref, snapshot) {
-    final lang = AppLocalizations.of(context)!;
-
-    return Card(
-        elevation: 8,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              _SettingsLine(
-                lang.supportTitle,
-                child: SizedBox(
-                    height: 50,
-                    width: 200,
-                    child: Card(
-                      elevation: 2,
-                      child: Center(
-                        child: TextButton(
-                          child: const Text(
-                            'martinssvdev@gmail.com',
-                          ),
-                          onPressed: () {
-                            _composeMail();
-                          },
-                        ),
-                      ),
-                    )),
-              ),
-            ],
-          ),
-        ));
-  });
-}
-
-Widget _buildRemoveAds() {
-  return Consumer(
-    builder: (context, ref, child) {
-      final lang = AppLocalizations.of(context)!;
-
-      if (inAppPurchaseControllerProvider == null) {
-        return const SizedBox.shrink();
-      }
-
-      Widget icon;
-      VoidCallback? callback;
-
-      if (inAppPurchaseControllerProvider != null
-          ? ref.watch(inAppPurchaseControllerProvider!).maybeMap(
-                active: (value) => true,
-                orElse: () => false,
-              )
-          : false) {
-        icon = const Text('❤️');
-      } else if (inAppPurchaseControllerProvider != null
-          ? ref.watch(inAppPurchaseControllerProvider!).maybeMap(
-                pending: (value) => true,
-                orElse: () => false,
-              )
-          : false) {
-        icon = const CircularProgressIndicator();
-      } else {
-        icon = const Text(
-          '1.79€',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        );
-        callback = () {
-          if (inAppPurchaseControllerProvider != null) {
-            ref.read(inAppPurchaseControllerProvider!.notifier).buy();
-          }
-        };
-      }
-      return Card(
-        elevation: 8,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              _SettingsLine(
-                lang.removeAdsTitle,
-                onSelected: callback,
-                child: SizedBox(
-                  height: 50,
-                  width: 100,
-                  child: Card(
-                    elevation: 2,
-                    child: Center(child: icon),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    },
-  );
 }
 
 class _SettingsLine extends StatelessWidget {
