@@ -1,3 +1,8 @@
+import 'package:hive/hive.dart';
+import 'package:rigify/app/bus_data/route.dart';
+
+part 'stop.g.dart';
+
 final Map<String?, Stop> stops = {};
 final Map<String?, List<String?>> searchCache = {};
 
@@ -45,6 +50,46 @@ String toAscii(String str) {
   return arr.join('');
 }
 
+@HiveType(typeId: 2)
+class StopType {
+  @HiveField(0)
+  String? stopName;
+  @HiveField(1)
+  RouteType? route;
+  @HiveField(2)
+  String? id;
+  @HiveField(3)
+  String? asciiName;
+  @HiveField(4)
+  double? latitude;
+  @HiveField(5)
+  double? longitude;
+
+  String info = '';
+  String street = '';
+  String area = '';
+  String city = '';
+
+  StopType({
+    this.stopName,
+    this.route,
+    this.id,
+    this.asciiName,
+    this.latitude,
+    this.longitude,
+  });
+
+  static fromJson(StopType? stopType) {
+    return StopType()
+      ..stopName = stopType!.stopName
+      ..route = stopType.route
+      ..id = stopType.id
+      ..asciiName = stopType.asciiName
+      ..latitude = stopType.latitude
+      ..longitude = stopType.longitude;
+  }
+}
+
 class Stop {
   String? id;
   String? name;
@@ -56,6 +101,15 @@ class Stop {
   String street = '';
   String area = '';
   String city = '';
+
+  static fromJson(Stop? stop) {
+    return Stop()
+      ..id = stop!.id
+      ..name = stop.name
+      ..asciiName = stop.asciiName
+      ..latitude = stop.latitude
+      ..longitude = stop.longitude;
+  }
 
   Stop({
     this.id,

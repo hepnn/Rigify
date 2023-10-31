@@ -29,6 +29,39 @@ List<RouteType> filterFavoriteRoutes(String? stransport,
   return favoriteRoutes;
 }
 
+List<Stop> filterFavoriteStops(String? stransport,
+    [String snum = '', String stype = '']) {
+  final List<Stop> favoriteStops = [];
+
+  for (Stop stop in stops.values) {
+    if (favoriteStopsBox.containsKey(stop.name)) {
+      if (stransport!.isNotEmpty && stransport != stop.name) continue;
+      if (snum.isNotEmpty && snum != stop.area) continue;
+      favoriteStops.add(stop);
+    }
+  }
+
+  return favoriteStops;
+}
+
+List<StopType> getFavoriteStops() {
+  final List<String> keys = favoriteStopsBox.keys.cast<String>().toList();
+  final List<StopType> favoriteStops = [];
+  for (String key in keys) {
+    final stop = StopType.fromJson(favoriteStopsBox.get(key));
+    favoriteStops.add(stop);
+  }
+  return favoriteStops;
+}
+
+// get favorites altogether
+List<dynamic> getFavorites() {
+  final List<dynamic> favorites = [];
+  favorites.addAll(getFavoriteRoutes());
+  favorites.addAll(getFavoriteStops());
+  return favorites;
+}
+
 List<RouteType> filterRoutes(String? stransport,
     [String snum = '', String stype = '']) {
   final List<RouteType> results = [];
