@@ -5,10 +5,14 @@ import 'package:jiffy/jiffy.dart';
 import 'package:rigify/ads/banner_ad_widget.dart';
 import 'package:rigify/app/news_page/rss_feed/api/feed_fetch.dart';
 import 'package:rigify/app/news_page/rss_feed/model/feed_item.dart';
+import 'package:rigify/locale/locale_providers.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-final feedItemsProvider =
-    FutureProvider<List<FeedItem>>((ref) => fetchFeedItems());
+final feedItemsProvider = FutureProvider<List<FeedItem>>(
+  (ref) => fetchFeedItems(
+    ref.watch(localeProvider),
+  ),
+);
 
 class RSSFeed extends ConsumerWidget {
   final bool adsRemoved;
@@ -33,19 +37,8 @@ class RSSFeed extends ConsumerWidget {
 
               String date = feedItem.pubDate;
 
-              RegExp regex = RegExp(r'(\d{2})\s(\w{3})\s\d{4}');
-              RegExpMatch? match = regex.firstMatch(date);
-              if (match != null) {
-                String? day = match.group(1);
-                String? month = match.group(2);
-
-                DateTime dateTime =
-                    Jiffy('$day $month 2023', 'dd MMM yyyy').dateTime;
-                String formattedDate = Jiffy(dateTime).format('dd MMM');
-
-                date = formattedDate;
-                print(formattedDate); // Output: 07 Jul
-              }
+              final formattedDate =
+                  Jiffy(date, 'dd. MMM. yyyy').format('dd MMM yyyy');
 
               return InkWell(
                 borderRadius: BorderRadius.circular(16),
@@ -83,10 +76,10 @@ class RSSFeed extends ConsumerWidget {
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
-                              // Text(
-                              //   date,
-                              //   style: const TextStyle(color: Colors.grey),
-                              // )
+                              Text(
+                                formattedDate,
+                                style: const TextStyle(color: Colors.grey),
+                              )
                             ],
                           ),
                         ),
@@ -104,10 +97,12 @@ class RSSFeed extends ConsumerWidget {
               );
             },
             separatorBuilder: (context, index) {
-              if ((index % feedItems.length ==
+              final showAd = (index % feedItems.length ==
                       0) && // README: To abide by family program policy, there can only be 1 ad per page.
                   adsControllerAvailable &&
-                  !adsRemoved) {
+                  !adsRemoved;
+
+              if (showAd) {
                 return const SizedBox(
                   height: 50,
                   child: BannerAdWidget(),
