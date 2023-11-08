@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -6,7 +7,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logging/logging.dart';
 import 'package:rigify/app/bus_data/route.dart';
 import 'package:rigify/app/bus_data/stop.dart';
 import 'package:rigify/app/bus_data/utils/parse_routes_data.dart';
@@ -25,12 +25,6 @@ class FavoritePage extends StatefulWidget {
 }
 
 class _FavoritePageState extends State<FavoritePage> {
-  static final _log = Logger('FavoritePage');
-
-  final ScrollController _scrollController = ScrollController();
-  final GlobalKey _reorderableListKey = GlobalKey();
-  late Timer _timer;
-
   bool _reorderEnabled = false;
   int draggedItemIndex = -1;
   @override
@@ -63,137 +57,9 @@ class _FavoritePageState extends State<FavoritePage> {
           },
         )
       ]),
-      // body: favoritesBox.isEmpty
-      //     ? const _FavoritesEmpty()
-      //     :
-      // : ValueListenableBuilder(
-      //     valueListenable: favoritesBox.listenable(),
-      //     builder: (context, dynamic box, child) {
-      //       final List<RouteType> favoriteRouted = getFavoriteRoutes();
-      //
-      //       _log.info('favoriteRouted: $favoriteRouted');
-      //       return Padding(
-      //         padding: const EdgeInsets.all(8.0),
-      //         child: RefreshIndicator(
-      //           onRefresh: () async {
-      //             await Future.delayed(const Duration(milliseconds: 500));
-      //             setState(() {});
-      //           },
-      //           child: CustomReorderableListView.separated(
-      //             key: _reorderableListKey,
-      //             buildDefaultDragHandles: _reorderEnabled,
-      //             physics: const BouncingScrollPhysics(),
-      //             itemCount: favoritesBox.length,
-      //             separatorBuilder: (_, __) => const SizedBox(height: 2),
-      //             itemBuilder: (context, i) {
-      //               final RouteType route = favoriteRouted[i];
-      //               final List<RouteType> filterRouted =
-      //                   filterFavoriteRoutes(route.transport);
-      //               if (filterRouted.isEmpty) {
-      //                 return NumTileSkeleton(
-      //                   key: ValueKey('abc- $i'),
-      //                 );
-      //               } else {
-      //                 return Stack(
-      //                   key: ValueKey('abcd - $i'),
-      //                   children: [
-      //                     Consumer(builder: (context, ref, child) {
-      //                       return Listener(
-      //                         onPointerUp: (event) {
-      //                           if (_timer.isActive) {
-      //                             _timer.cancel();
-      //                             _reorderEnabled
-      //                                 ? null
-      //                                 : Navigator.push(
-      //                                     context,
-      //                                     MaterialPageRoute(
-      //                                       builder: (_) =>
-      //                                           StopsPage(route),
-      //                                     ),
-      //                                   );
-      //                           }
-      //                         },
-      //                         onPointerDown: (event) {
-      //                           _timer = Timer(
-      //                               const Duration(milliseconds: 500), () {
-      //                             _reorderEnabled
-      //                                 ? null
-      //                                 : _addFavDialog(context, route);
-      //                           });
-      //                         },
-      //                         child: FavoriteTile(
-      //                           route,
-      //                           reorderEnabled: _reorderEnabled,
-      //                         ),
-      //                       );
-      //                     }),
-      //                   ],
-      //                 );
-      //               }
-      //             },
-      //             shrinkWrap: true,
-      //             onReorder: _reorderEnabled
-      //                 ? (int oldIndex, int newIndex) {
-      //                     if (newIndex > oldIndex) {
-      //                       newIndex -= 1;
-      //                     }
-      //                     setState(() {
-      //                       final oldItem = favoritesBox.getAt(oldIndex);
-      //                       final newItem = favoritesBox.getAt(newIndex);
-      //
-      //                       draggedItemIndex = oldIndex;
-      //
-      //                       favoritesBox.putAt(oldIndex, newItem!);
-      //                       favoritesBox.putAt(newIndex, oldItem!);
-      //                     });
-      //                   }
-      //                 : (int oldIndex, int newIndex) {},
-      //             scrollController: _scrollController,
-      //             proxyDecorator: (Widget child, int index,
-      //                 Animation<double> animation) {
-      //               return DragTarget<int>(
-      //                 onWillAccept: (int? data) {
-      //                   return index == draggedItemIndex;
-      //                 },
-      //                 builder: (BuildContext context,
-      //                     List<dynamic> accepted, List<dynamic> rejected) {
-      //                   // Use the animation value to apply any visual effects to the dragged item.
-      //                   final animValue =
-      //                       Curves.easeInOut.transform(animation.value);
-      //                   final scale = lerpDouble(1, 1.05, animValue)!;
-      //                   final elevation = lerpDouble(0, 6, animValue)!;
-      //                   // Wrap the child widget with a container to apply the highlight effect.
-      //                   return Transform.scale(
-      //                     scale: scale,
-      //                     child: Container(
-      //                       decoration: BoxDecoration(
-      //                         boxShadow: [
-      //                           BoxShadow(
-      //                             color: Colors.white.withOpacity(0.1),
-      //                             blurRadius: 10,
-      //                             spreadRadius: 1,
-      //                             offset: const Offset(0, 1),
-      //                           ),
-      //                         ],
-      //                         borderRadius: BorderRadius.circular(16),
-      //                       ),
-      //                       child: Material(
-      //                         elevation: elevation,
-      //                         borderRadius: BorderRadius.circular(16),
-      //                         color: Colors.transparent,
-      //                         child: child,
-      //                       ),
-      //                     ),
-      //                   );
-      //                 },
-      //               );
-      //             },
-      //           ),
-      //         ),
-      //       );
-      //     },
-      //   ),
-      body: FavoritesList(),
+      body: FavoritesList(
+        reorderEnabled: _reorderEnabled,
+      ),
     );
   }
 
@@ -298,7 +164,11 @@ class _FavoritesEmpty extends StatelessWidget {
 }
 
 class FavoritesList extends StatefulWidget {
-  const FavoritesList({super.key});
+  final bool reorderEnabled;
+  const FavoritesList({
+    super.key,
+    required this.reorderEnabled,
+  });
 
   @override
   State<FavoritesList> createState() => _FavoritesListState();
@@ -308,6 +178,10 @@ class _FavoritesListState extends State<FavoritesList> {
   @override
   Widget build(BuildContext context) {
     final isEmpty = favoritesBox.isEmpty && favoriteStopsBox.isEmpty;
+
+    late Timer timer;
+
+    int draggedItemIndex = -1;
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -338,10 +212,64 @@ class _FavoritesListState extends State<FavoritesList> {
                       builder: (context, dynamic box, child) {
                         final List<StopType> favoriteStops = getFavoriteStops();
 
-                        return ListView.builder(
+                        return ReorderableListView.builder(
                           itemCount: favoriteStopsBox.length,
                           shrinkWrap: true,
+                          buildDefaultDragHandles: widget.reorderEnabled,
                           physics: const NeverScrollableScrollPhysics(),
+                          onReorder: widget.reorderEnabled
+                              ? (oldIndex, newIndex) {
+                                  // Update your data according to the new order
+                                  if (newIndex > oldIndex) {
+                                    newIndex -= 1;
+                                  }
+                                  draggedItemIndex = newIndex;
+
+                                  final StopType stop =
+                                      favoriteStops.removeAt(oldIndex);
+                                  favoriteStops.insert(newIndex, stop);
+                                }
+                              : (int oldIndex, int newIndex) {},
+                          proxyDecorator: (Widget child, int index,
+                              Animation<double> animation) {
+                            return DragTarget<int>(
+                              onWillAccept: (int? data) {
+                                return index == draggedItemIndex;
+                              },
+                              builder: (BuildContext context,
+                                  List<dynamic> accepted,
+                                  List<dynamic> rejected) {
+                                // Use the animation value to apply any visual effects to the dragged item.
+                                final animValue =
+                                    Curves.easeInOut.transform(animation.value);
+                                final scale = lerpDouble(1, 1.05, animValue)!;
+                                final elevation = lerpDouble(0, 6, animValue)!;
+                                // Wrap the child widget with a container to apply the highlight effect.
+                                return Transform.scale(
+                                  scale: scale,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.white.withOpacity(0.1),
+                                          blurRadius: 10,
+                                          spreadRadius: 1,
+                                          offset: const Offset(0, 1),
+                                        ),
+                                      ],
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: Material(
+                                      elevation: elevation,
+                                      borderRadius: BorderRadius.circular(16),
+                                      color: Colors.transparent,
+                                      child: child,
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
                           itemBuilder: (context, i) {
                             final stop = favoriteStops[i];
 
@@ -361,17 +289,40 @@ class _FavoritesListState extends State<FavoritesList> {
                                 key: ValueKey('abc- $i'),
                               );
                             } else {
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          TimePage(stop.route, stopConverted),
-                                    ),
-                                  );
+                              return Listener(
+                                key: ValueKey('abc- $i'),
+                                onPointerUp: (event) {
+                                  if (timer.isActive) {
+                                    timer.cancel();
+                                    widget.reorderEnabled
+                                        ? null
+                                        : Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) => TimePage(
+                                                stop.route,
+                                                stopConverted,
+                                              ),
+                                            ),
+                                          );
+                                  }
                                 },
-                                child: FavoriteStopTile(stop),
+                                onPointerDown: (event) {
+                                  timer = Timer(
+                                      const Duration(milliseconds: 500), () {
+                                    widget.reorderEnabled
+                                        ? null
+                                        : _addFavStopDialog(
+                                            context,
+                                            stop,
+                                            stopConverted,
+                                          );
+                                  });
+                                },
+                                child: FavoriteStopTile(
+                                  stop,
+                                  widget.reorderEnabled,
+                                ),
                               );
                             }
                           },
@@ -398,10 +349,64 @@ class _FavoritesListState extends State<FavoritesList> {
                         final List<RouteType> favoriteRoutes =
                             getFavoriteRoutes();
 
-                        return ListView.builder(
+                        return ReorderableListView.builder(
                           itemCount: favoritesBox.length,
                           shrinkWrap: true,
+                          buildDefaultDragHandles: widget.reorderEnabled,
                           physics: const NeverScrollableScrollPhysics(),
+                          onReorder: widget.reorderEnabled
+                              ? (oldIndex, newIndex) {
+                                  // Update your data according to the new order
+                                  if (newIndex > oldIndex) {
+                                    newIndex -= 1;
+                                  }
+                                  draggedItemIndex = newIndex;
+
+                                  final RouteType route =
+                                      favoriteRoutes.removeAt(oldIndex);
+                                  favoriteRoutes.insert(newIndex, route);
+                                }
+                              : (int oldIndex, int newIndex) {},
+                          proxyDecorator: (Widget child, int index,
+                              Animation<double> animation) {
+                            return DragTarget<int>(
+                              onWillAccept: (int? data) {
+                                return index == draggedItemIndex;
+                              },
+                              builder: (BuildContext context,
+                                  List<dynamic> accepted,
+                                  List<dynamic> rejected) {
+                                // Use the animation value to apply any visual effects to the dragged item.
+                                final animValue =
+                                    Curves.easeInOut.transform(animation.value);
+                                final scale = lerpDouble(1, 1.05, animValue)!;
+                                final elevation = lerpDouble(0, 6, animValue)!;
+                                // Wrap the child widget with a container to apply the highlight effect.
+                                return Transform.scale(
+                                  scale: scale,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.white.withOpacity(0.1),
+                                          blurRadius: 10,
+                                          spreadRadius: 1,
+                                          offset: const Offset(0, 1),
+                                        ),
+                                      ],
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: Material(
+                                      elevation: elevation,
+                                      borderRadius: BorderRadius.circular(16),
+                                      color: Colors.transparent,
+                                      child: child,
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
                           itemBuilder: (context, i) {
                             final route = favoriteRoutes[i];
 
@@ -413,16 +418,33 @@ class _FavoritesListState extends State<FavoritesList> {
                                 key: ValueKey('abc- $i'),
                               );
                             } else {
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => StopsPage(route),
-                                    ),
-                                  );
+                              return Listener(
+                                key: ValueKey('abc- $i'),
+                                onPointerUp: (event) {
+                                  if (timer.isActive) {
+                                    timer.cancel();
+                                    widget.reorderEnabled
+                                        ? null
+                                        : Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) => StopsPage(route),
+                                            ),
+                                          );
+                                  }
                                 },
-                                child: FavoriteTile(route),
+                                onPointerDown: (event) {
+                                  timer = Timer(
+                                      const Duration(milliseconds: 500), () {
+                                    widget.reorderEnabled
+                                        ? null
+                                        : _addFavRouteDialog(context, route);
+                                  });
+                                },
+                                child: FavoriteTile(
+                                  route,
+                                  reorderEnabled: widget.reorderEnabled,
+                                ),
                               );
                             }
                           },
@@ -435,12 +457,71 @@ class _FavoritesListState extends State<FavoritesList> {
       ),
     );
   }
+
+  _addFavRouteDialog(context, RouteType route) async {
+    final lang = AppLocalizations.of(context)!;
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          elevation: 10,
+          children: [
+            SimpleDialogOption(
+              onPressed: () async {
+                favoritesBox.containsKey(route.name)
+                    ? favoritesBox.delete(route.name)
+                    : favoritesBox.put(route.name, route);
+                Navigator.of(context, rootNavigator: true).pop();
+              },
+              child: Text(
+                favoritesBox.containsKey(route.name)
+                    ? lang.favoriteDialogRemove
+                    : lang.favoriteDialogAdd,
+              ),
+            ),
+          ],
+          //backgroundColor: Colors.green,
+        );
+      },
+    );
+  }
+
+  _addFavStopDialog(context, StopType stopType, Stop stop) async {
+    final lang = AppLocalizations.of(context)!;
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          elevation: 10,
+          children: [
+            SimpleDialogOption(
+              onPressed: () async {
+                favoriteStopsBox.containsKey(stop.name)
+                    ? favoriteStopsBox.delete(stop.name)
+                    : favoriteStopsBox.put(stop.name, stopType);
+                Navigator.of(context, rootNavigator: true).pop();
+              },
+              child: Text(
+                favoriteStopsBox.containsKey(stop.name)
+                    ? lang.favoriteDialogRemove
+                    : lang.favoriteDialogAdd,
+              ),
+            ),
+          ],
+          //backgroundColor: Colors.green,
+        );
+      },
+    );
+  }
 }
 
 class FavoriteStopTile extends StatelessWidget {
   final StopType stop;
+  final bool reorderEnabled;
 
-  const FavoriteStopTile(this.stop, {super.key});
+  const FavoriteStopTile(this.stop, this.reorderEnabled, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -465,6 +546,11 @@ class FavoriteStopTile extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Container(
           padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            border:
+                reorderEnabled ? Border.all(color: Colors.grey.shade600) : null,
+            borderRadius: BorderRadius.circular(16),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -490,19 +576,23 @@ class FavoriteStopTile extends StatelessWidget {
                 ),
               ),
               const VerticalDivider(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    stop.route!.name ?? '',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: Colors.grey[500],
-                        ),
-                  ),
-                  Text(stop.stopName ?? '',
-                      style: Theme.of(context).textTheme.titleMedium),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      stop.route!.name ?? '',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: Colors.grey[500],
+                          ),
+                    ),
+                    Text(stop.stopName ?? '',
+                        style: Theme.of(context).textTheme.titleMedium),
+                  ],
+                ),
               ),
+              if (reorderEnabled)
+                const FaIcon(FontAwesomeIcons.arrowsUpDownLeftRight),
             ],
           ),
         ),

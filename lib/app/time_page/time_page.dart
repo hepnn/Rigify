@@ -97,6 +97,11 @@ class _TimePageState extends State<TimePage>
 
   @override
   Widget build(BuildContext context) {
+    final stop = StopType(
+      id: _stop?.id,
+      stopName: _stop?.name,
+      route: _route,
+    );
     return DefaultTabController(
       length: _times.keys.length,
       child: Scaffold(
@@ -151,10 +156,6 @@ class _TimePageState extends State<TimePage>
                       : Icons.favorite_outline,
                   color: Colors.white),
               onPressed: () async {
-                final stop = StopType(
-                  stopName: _stop.name,
-                  route: _route,
-                );
                 setState(() {
                   _isFavorite = !_isFavorite;
                   if (_isFavorite) {

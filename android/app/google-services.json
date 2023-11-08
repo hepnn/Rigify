@@ -1,26 +1,79 @@
 {
   "project_info": {
-    "project_number": "404922500983",
-    "project_id": "rigifyapp",
-    "storage_bucket": "rigifyapp.appspot.com"
+    "project_number": "929900450108",
+    "project_id": "rigify",
+    "storage_bucket": "rigify.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:404922500983:android:5876c3dec9f1966a57c372",
+        "mobilesdk_app_id": "1:929900450108:android:366a07fe7dde40781d8e39",
         "android_client_info": {
-          "package_name": "com.ouji.rigify"
+          "package_name": "com.example.rigify"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "929900450108-sa3rvfafnbgpqd4sakd6fvuq0da5mn0d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyDwbb8KLNdCCqc2LcNyo73XYubtrhZAP-k"
+          "current_key": "AIzaSyB5jCiSCT_ErPPe4KWvl97Ru_kKf_VcVBY"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "929900450108-sa3rvfafnbgpqd4sakd6fvuq0da5mn0d.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "929900450108-3us5n48oaa1ocskenrrvui59mba20jo6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.yamawagi.rigify"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:929900450108:android:304e9c9f89f323b71d8e39",
+        "android_client_info": {
+          "package_name": "com.yamawagi.rigify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "929900450108-sa3rvfafnbgpqd4sakd6fvuq0da5mn0d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5jCiSCT_ErPPe4KWvl97Ru_kKf_VcVBY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "929900450108-sa3rvfafnbgpqd4sakd6fvuq0da5mn0d.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "929900450108-3us5n48oaa1ocskenrrvui59mba20jo6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.yamawagi.rigify"
+              }
+            }
+          ]
         }
       }
     }

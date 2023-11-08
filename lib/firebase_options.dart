@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDwbb8KLNdCCqc2LcNyo73XYubtrhZAP-k',
-    appId: '1:404922500983:android:5876c3dec9f1966a57c372',
-    messagingSenderId: '404922500983',
-    projectId: 'rigifyapp',
-    storageBucket: 'rigifyapp.appspot.com',
+    apiKey: 'AIzaSyB5jCiSCT_ErPPe4KWvl97Ru_kKf_VcVBY',
+    appId: '1:929900450108:android:304e9c9f89f323b71d8e39',
+    messagingSenderId: '929900450108',
+    projectId: 'rigify',
+    storageBucket: 'rigify.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAMUlFb86O2_KbLuFz95PKPEXokxjKBqt0',
-    appId: '1:404922500983:ios:60da4a520728041157c372',
-    messagingSenderId: '404922500983',
-    projectId: 'rigifyapp',
-    storageBucket: 'rigifyapp.appspot.com',
+    apiKey: 'AIzaSyBGjb90blIdmMQWbiaxhCfh6RR4jKGXcws',
+    appId: '1:929900450108:ios:9e692168517d768a1d8e39',
+    messagingSenderId: '929900450108',
+    projectId: 'rigify',
+    storageBucket: 'rigify.appspot.com',
     iosBundleId: 'com.ouji.rigify',
   );
 }
