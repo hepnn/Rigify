@@ -22,14 +22,24 @@ import 'package:rigify/in_app_purchases/in_app_purchase.dart';
 import 'package:rigify/locale/locale_providers.dart';
 import 'package:rigify/theme/config/theme.dart';
 import 'package:rigify/theme/theme_mode_state.dart';
+import 'package:flutter/services.dart';
 
 import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  final certString = await rootBundle
+      .loadString('assets/certificates/saraksti.rigassatiksme.lv.crt');
+  final certEncoded = Uint8List.fromList(certString.codeUnits);
+
+  SecurityContext.defaultContext.setTrustedCertificatesBytes(certEncoded);
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  MobileAds.instance.initialize();
 
   RequestConfiguration configuration = RequestConfiguration(
     tagForChildDirectedTreatment: TagForChildDirectedTreatment.unspecified,
@@ -108,11 +118,11 @@ class App extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<Locale> _supportedLocales = ref.read(supportedLocalesProvider);
+    List<Locale> supportedLocales = ref.read(supportedLocalesProvider);
 
     // Watch the current locale and rebuild on change
-    Locale _locale = ref.watch(localeProvider);
-    _log.info("Rebuilding with watched locale: $_locale");
+    Locale locale = ref.watch(localeProvider);
+    _log.info("Rebuilding with watched locale: $locale");
 
     FlutterNativeSplash.remove();
 
@@ -129,11 +139,11 @@ class App extends ConsumerWidget {
       ),
       debugShowCheckedModeBanner: false,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: _supportedLocales,
+      supportedLocales: supportedLocales,
       themeMode: currentTheme.themeMode,
       theme: lightTheme,
       darkTheme: darkTheme,
-      locale: _locale,
+      locale: locale,
       useInheritedMediaQuery: true,
       localeResolutionCallback: (locale, supportedLocales) {
         // Check if the current device locale is supported

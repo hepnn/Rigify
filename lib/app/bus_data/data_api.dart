@@ -16,7 +16,7 @@ class FetchResponse {
 }
 
 const String stopLink =
-    'https://openmobilitydata-data.s3-us-west-1.amazonaws.com/public/feeds/rigas-satiksme/333/20230912/original/stops.txt';
+    'https://openmobilitydata-data.s3-us-west-1.amazonaws.com/public/feeds/rigas-satiksme/333/20231023/original/stops.txt';
 const List<String> routesLinks = [
   'https://saraksti.rigassatiksme.lv/riga/routes.txt',
   // 'http://www.marsruti.lv/rigasmikroautobusi/bbus/routes.txt', // currently not shown in app
