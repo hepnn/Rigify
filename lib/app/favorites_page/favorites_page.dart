@@ -94,35 +94,6 @@ class _FavoritePageState extends State<FavoritePage> {
       context: context,
     );
   }
-
-  _addFavDialog(context, RouteType route) async {
-    final lang = AppLocalizations.of(context)!;
-
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SimpleDialog(
-          elevation: 10,
-          children: [
-            SimpleDialogOption(
-              onPressed: () async {
-                favoritesBox.containsKey(route.name)
-                    ? favoritesBox.delete(route.name)
-                    : favoritesBox.put(route.name, route);
-                Navigator.of(context, rootNavigator: true).pop();
-              },
-              child: Text(
-                favoritesBox.containsKey(route.name)
-                    ? lang.favoriteDialogRemove
-                    : lang.favoriteDialogAdd,
-              ),
-            ),
-          ],
-          //backgroundColor: Colors.green,
-        );
-      },
-    );
-  }
 }
 
 class _FavoritesEmpty extends StatelessWidget {

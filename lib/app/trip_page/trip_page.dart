@@ -23,13 +23,13 @@ class TripPage extends StatelessWidget {
         elevation: Platform.isIOS ? 0 : 4,
         backgroundColor: colors[_route.transport!],
         title: Text(
-          _route!.name!,
+          _route.name!,
         ),
       ),
       body: ListView.builder(
-        itemCount: _route!.stops.length,
+        itemCount: _route.stops.length,
         itemBuilder: (_, i) {
-          final Stop stop = _route!.stops[i];
+          final Stop stop = _route.stops[i];
           return GestureDetector(
             onTap: () => Navigator.push(context,
                 MaterialPageRoute(builder: (_) => TimePage(_route, stop))),
@@ -39,14 +39,16 @@ class TripPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
+                    margin: const EdgeInsets.only(right: 10),
+                    width: 70,
                     child: Text(
                       times[stop.id]!,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w600),
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                    margin: const EdgeInsets.only(right: 10),
-                    width: 70,
                   ),
                   Expanded(
                     child: Text(

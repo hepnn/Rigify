@@ -36,9 +36,14 @@ class RSSFeed extends ConsumerWidget {
               final feedItem = feedItems[index];
 
               String date = feedItem.pubDate;
+              String formattedDate = '';
 
-              final formattedDate =
-                  Jiffy(date, 'dd. MMM. yyyy').format('dd MMM yyyy');
+              try {
+                formattedDate =
+                    Jiffy(date, 'dd. MMM. yyyy').format('dd MMM yyyy');
+              } catch (e) {
+                formattedDate = '';
+              }
 
               return InkWell(
                 borderRadius: BorderRadius.circular(16),

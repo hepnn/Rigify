@@ -214,11 +214,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                     itemCount: transportNames.length,
                     itemBuilder: (context, i) {
                       final String transport = transportNames.keys.toList()[i];
-                      // final String name = transportNames[transport]!;
                       final String transportName = lang.transports;
                       List transports = transportName.split(':');
                       return GridItem(
-                        // color: const Color.fromARGB(255, 64, 63, 63),
                         title: transports[i],
                         iconColor: colors[transport],
                         icon: Icons.directions_bus,

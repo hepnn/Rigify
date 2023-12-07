@@ -58,24 +58,35 @@ class _TimePageState extends State<TimePage>
         updateScroll(_weekdays[_tabController!.index]);
       });
 
-    // WidgetsBinding.instance
-    //     .addPostFrameCallback((_) => updateScroll(_weekdays[selected]));
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => updateScroll(_weekdays[selected]));
     super.initState();
   }
 
   void updateScroll(String? weekday) {
-    final GlobalKey? key = _keys[weekday!];
-    final GlobalKey? key_0 = _keys['${weekday}_0'];
-    if (key_0 == null) return;
+    if (weekday == null) return; // Early return if weekday is null
 
-    final RenderBox renderBox =
-        key!.currentContext!.findRenderObject() as RenderBox;
-    final RenderBox renderBox_0 =
-        key_0.currentContext!.findRenderObject() as RenderBox;
-    final Offset position = renderBox.localToGlobal(Offset.zero);
-    final Offset position_0 = renderBox_0.localToGlobal(Offset.zero);
-    _scrollControllers[weekday]!.animateTo(position.dy - position_0.dy,
-        duration: const Duration(microseconds: 1), curve: Curves.linear);
+    final GlobalKey? key = _keys[weekday];
+    final GlobalKey? key_0 = _keys['${weekday}_0'];
+
+    final RenderBox? renderBox =
+        key?.currentContext?.findRenderObject() as RenderBox?;
+    final RenderBox? renderBox_0 =
+        key_0?.currentContext?.findRenderObject() as RenderBox?;
+
+    // Calculate positions safely, nothing happens if any of the render boxes are null
+    final Offset? position = renderBox?.localToGlobal(Offset.zero);
+    final Offset? position_0 = renderBox_0?.localToGlobal(Offset.zero);
+
+    // If either position is null, nothing happens
+    if (position != null && position_0 != null) {
+      // Animate the scroll controller if it exists
+      _scrollControllers[weekday]?.animateTo(
+        position.dy - position_0.dy,
+        duration: const Duration(microseconds: 1),
+        curve: Curves.linear,
+      );
+    }
   }
 
   GlobalKey? getKey(String? weekday, int hour) {
@@ -97,11 +108,6 @@ class _TimePageState extends State<TimePage>
 
   @override
   Widget build(BuildContext context) {
-    final stop = StopType(
-      id: _stop?.id,
-      stopName: _stop?.name,
-      route: _route,
-    );
     return DefaultTabController(
       length: _times.keys.length,
       child: Scaffold(
@@ -143,7 +149,10 @@ class _TimePageState extends State<TimePage>
                     _route.name!,
                     style: const TextStyle(fontSize: 16, color: Colors.grey),
                   ),
-                  Text(_stop!.name!),
+                  Text(
+                    _stop!.name!,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ],
               ),
             ],
@@ -159,7 +168,14 @@ class _TimePageState extends State<TimePage>
                 setState(() {
                   _isFavorite = !_isFavorite;
                   if (_isFavorite) {
-                    favoriteStopsBox.put(_stop.name, stop);
+                    favoriteStopsBox.put(
+                      _stop.name,
+                      StopType(
+                        stopName: _stop.name,
+                        id: _stop.id,
+                        route: _route,
+                      ),
+                    );
                   } else {
                     favoriteStopsBox.delete(_stop.name);
                   }

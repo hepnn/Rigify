@@ -82,18 +82,18 @@ void loadRoutes(String text) {
       order = 1;
     }
 
-    if (number!.length == 3) {
-      if (number[0] == '3' && transport != 'expressbus') {
-        transport = 'expressbus';
-        order = 1;
-      }
-      if (number[0] == '2' && transport != 'minibus') {
-        transport = 'minibus';
-        order = 1;
-      }
-    } else if (transport == 'expressbus' || transport == 'minibus') {
-      transport = 'bus';
-    }
+    // if (number!.length == 3) {
+    //   if (number[0] == '3' && transport != 'expressbus') {
+    //     transport = 'expressbus';
+    //     order = 1;
+    //   }
+    //   if (number[0] == '2' && transport != 'minibus') {
+    //     transport = 'minibus';
+    //     order = 1;
+    //   }
+    // } else if (transport == 'expressbus' || transport == 'minibus') {
+    //   transport = 'bus';
+    // }
 
     final int idx = done.indexOf(transport);
     if (idx > -1 && transport != done[done.length - 1]) continue;
