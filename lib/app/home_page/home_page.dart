@@ -9,6 +9,7 @@ import 'package:rigify/app/bus_data/stop.dart';
 import 'package:rigify/app/bus_data/utils/utils.dart';
 import 'package:rigify/app/home_page/widgets/search_overlay.dart';
 import 'package:rigify/app/home_page/widgets/transport_card.dart';
+import 'package:rigify/app/realtime/ui/transport_map.dart';
 import 'package:rigify/app/recents_page/recents_page.dart';
 import 'package:rigify/app/route_page/route_page.dart';
 import 'package:rigify/app/search_time_page/search_time_page.dart';
@@ -211,11 +212,28 @@ class _HomePageState extends ConsumerState<HomePage> {
                       crossAxisSpacing: 16.0,
                       childAspectRatio: 1,
                     ),
-                    itemCount: transportNames.length,
+                    itemCount: transportNames.length + 1,
                     itemBuilder: (context, i) {
+                      if (i == transportNames.length) {
+                        return GridItem(
+                          title: 'Realtime Map',
+                          iconColor: Colors.grey,
+                          icon: Icons.map,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => TransportMap(),
+                              ),
+                            );
+                          },
+                        );
+                      }
+
                       final String transport = transportNames.keys.toList()[i];
                       final String transportName = lang.transports;
                       List transports = transportName.split(':');
+
                       return GridItem(
                         title: transports[i],
                         iconColor: colors[transport],
