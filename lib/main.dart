@@ -31,9 +31,13 @@ Future<void> main() async {
 
   final certString = await rootBundle
       .loadString('assets/certificates/saraksti.rigassatiksme.lv.crt');
+  final certRsNews =
+      await rootBundle.loadString('assets/certificates/rigassatiksme.crt');
   final certEncoded = Uint8List.fromList(certString.codeUnits);
+  final certEncodedRsNews = Uint8List.fromList(certRsNews.codeUnits);
 
   SecurityContext.defaultContext.setTrustedCertificatesBytes(certEncoded);
+  SecurityContext.defaultContext.setTrustedCertificatesBytes(certEncodedRsNews);
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
