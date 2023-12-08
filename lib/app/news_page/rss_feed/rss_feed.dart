@@ -9,7 +9,7 @@ import 'package:rigify/locale/locale_providers.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 final feedItemsProvider = FutureProvider<List<FeedItem>>(
-  (ref) => fetchFeedItems(
+  (ref) => fetchItems(
     ref.watch(localeProvider),
   ),
 );
