@@ -10,6 +10,7 @@ import 'package:rigify/app/bus_data/utils/utils.dart';
 import 'package:rigify/app/home_page/widgets/search_overlay.dart';
 import 'package:rigify/app/home_page/widgets/transport_card.dart';
 import 'package:rigify/app/realtime/ui/transport_map.dart';
+import 'package:rigify/app/realtime/ui/transport_page.dart';
 import 'package:rigify/app/recents_page/recents_page.dart';
 import 'package:rigify/app/route_page/route_page.dart';
 import 'package:rigify/app/search_time_page/search_time_page.dart';
@@ -223,7 +224,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => TransportMap(),
+                                builder: (_) => const TransportPage(),
                               ),
                             );
                           },
