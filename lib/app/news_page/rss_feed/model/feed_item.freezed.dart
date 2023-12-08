@@ -16,7 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$FeedItem {
-  String get guid => throw _privateConstructorUsedError;
+  String get content => throw _privateConstructorUsedError;
   String get pubDate => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get link => throw _privateConstructorUsedError;
@@ -31,7 +31,7 @@ abstract class $FeedItemCopyWith<$Res> {
   factory $FeedItemCopyWith(FeedItem value, $Res Function(FeedItem) then) =
       _$FeedItemCopyWithImpl<$Res, FeedItem>;
   @useResult
-  $Res call({String guid, String pubDate, String title, String link});
+  $Res call({String content, String pubDate, String title, String link});
 }
 
 /// @nodoc
@@ -47,15 +47,15 @@ class _$FeedItemCopyWithImpl<$Res, $Val extends FeedItem>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? guid = null,
+    Object? content = null,
     Object? pubDate = null,
     Object? title = null,
     Object? link = null,
   }) {
     return _then(_value.copyWith(
-      guid: null == guid
-          ? _value.guid
-          : guid // ignore: cast_nullable_to_non_nullable
+      content: null == content
+          ? _value.content
+          : content // ignore: cast_nullable_to_non_nullable
               as String,
       pubDate: null == pubDate
           ? _value.pubDate
@@ -81,7 +81,7 @@ abstract class _$$FeedItemImplCopyWith<$Res>
       __$$FeedItemImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String guid, String pubDate, String title, String link});
+  $Res call({String content, String pubDate, String title, String link});
 }
 
 /// @nodoc
@@ -95,15 +95,15 @@ class __$$FeedItemImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? guid = null,
+    Object? content = null,
     Object? pubDate = null,
     Object? title = null,
     Object? link = null,
   }) {
     return _then(_$FeedItemImpl(
-      guid: null == guid
-          ? _value.guid
-          : guid // ignore: cast_nullable_to_non_nullable
+      content: null == content
+          ? _value.content
+          : content // ignore: cast_nullable_to_non_nullable
               as String,
       pubDate: null == pubDate
           ? _value.pubDate
@@ -125,13 +125,13 @@ class __$$FeedItemImplCopyWithImpl<$Res>
 
 class _$FeedItemImpl implements _FeedItem {
   const _$FeedItemImpl(
-      {required this.guid,
+      {required this.content,
       required this.pubDate,
       required this.title,
       required this.link});
 
   @override
-  final String guid;
+  final String content;
   @override
   final String pubDate;
   @override
@@ -141,7 +141,7 @@ class _$FeedItemImpl implements _FeedItem {
 
   @override
   String toString() {
-    return 'FeedItem(guid: $guid, pubDate: $pubDate, title: $title, link: $link)';
+    return 'FeedItem(content: $content, pubDate: $pubDate, title: $title, link: $link)';
   }
 
   @override
@@ -149,14 +149,14 @@ class _$FeedItemImpl implements _FeedItem {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$FeedItemImpl &&
-            (identical(other.guid, guid) || other.guid == guid) &&
+            (identical(other.content, content) || other.content == content) &&
             (identical(other.pubDate, pubDate) || other.pubDate == pubDate) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.link, link) || other.link == link));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, guid, pubDate, title, link);
+  int get hashCode => Object.hash(runtimeType, content, pubDate, title, link);
 
   @JsonKey(ignore: true)
   @override
@@ -167,13 +167,13 @@ class _$FeedItemImpl implements _FeedItem {
 
 abstract class _FeedItem implements FeedItem {
   const factory _FeedItem(
-      {required final String guid,
+      {required final String content,
       required final String pubDate,
       required final String title,
       required final String link}) = _$FeedItemImpl;
 
   @override
-  String get guid;
+  String get content;
   @override
   String get pubDate;
   @override
