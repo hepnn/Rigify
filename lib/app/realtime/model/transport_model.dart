@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
 
 enum TransportType {
+  unknown(color: Colors.grey),
+  bus(color: Color(0xFFf4B427)),
+  tram(color: Color(0xFFff000C)),
+  trolley(color: Color(0xFF009dE0));
+
+  final Color color;
+
+  const TransportType({required this.color});
+}
+
+enum TransportStatus {
   unknown,
-  bus,
-  tram,
-  trolley,
+  onTime,
+  delayed,
+  early,
 }
 
 class Transport {
@@ -12,16 +23,16 @@ class Transport {
   final int? number;
   final double latitude;
   final double longitude;
-  final String? unknownField;
   final String vehicleId;
+  final int? bearing;
 
   Transport({
     required this.type,
     this.number,
     required this.latitude,
     required this.longitude,
-    this.unknownField,
     required this.vehicleId,
+    this.bearing = 0,
   });
 
   factory Transport.fromCsv(String csvLine) {
@@ -31,7 +42,7 @@ class Transport {
     int? number = _parseNumber(values);
     double latitude = _parseLatitude(values);
     double longitude = _parseLongitude(values);
-    String? unknownField = _parseUnknownField(values);
+    int? bearing = _parseBearing(values);
     String vehicleId = _parseVehicleId(values);
 
     return Transport(
@@ -39,7 +50,7 @@ class Transport {
       number: number,
       latitude: latitude,
       longitude: longitude,
-      unknownField: unknownField,
+      bearing: bearing,
       vehicleId: vehicleId,
     );
   }
@@ -59,11 +70,11 @@ class Transport {
     switch (typeValue) {
       // TODO: Correct the values
       case 1:
-        return TransportType.bus;
-      case 2:
-        return TransportType.tram;
-      case 3:
         return TransportType.trolley;
+      case 2:
+        return TransportType.bus;
+      case 3:
+        return TransportType.tram;
       default:
         return TransportType.unknown;
     }
@@ -89,11 +100,15 @@ class Transport {
         : 0.0;
   }
 
-  static String? _parseUnknownField(List<String> values) {
-    return values.length > 4 && values[4].isNotEmpty ? values[4] : null;
+  static int? _parseBearing(List<String> values) {
+    return values.length > 5 && values[5].isNotEmpty
+        ? int.tryParse(values[5])
+        : null;
   }
 
   static String _parseVehicleId(List<String> values) {
-    return values.length > 5 ? values[7] : '';
+    return values.length > 6 ? values[7] : '';
   }
+
+  bool get isKnown => number != null;
 }

@@ -1,5 +1,6 @@
-import 'package:rigify/app/realtime/model/transport_model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:rigify/app/realtime/model/transport_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'transport_service.g.dart';
@@ -27,3 +28,30 @@ TransportRepository transportRepository(TransportRepositoryRef ref) {
 Future<List<Transport>> fetchTransports(TransportRepositoryRef ref) {
   return ref.watch(transportRepositoryProvider).fetchTransports();
 }
+
+final selectedTransportTypesProvider = StateProvider<Set<TransportType>>((ref) {
+  return {};
+});
+
+final transportsStreamProvider =
+    StreamProvider.autoDispose<List<Transport>>((ref) {
+  final selectedTransportTypes = ref.watch(selectedTransportTypesProvider);
+  final initialFetch = ref.read(transportRepositoryProvider).fetchTransports();
+
+  final periodicFetch = Stream.periodic(const Duration(seconds: 10), (_) {
+    return ref.read(transportRepositoryProvider).fetchTransports();
+  }).asyncMap((event) async => await event);
+
+  return Stream.value(initialFetch).asyncExpand((initial) async* {
+    yield await initial; // Emit the result of the initial fetch
+    yield* periodicFetch; // Then continue with the periodic fetch stream
+  }).map((transports) {
+    // Apply the filter based on the selected transport types
+    if (selectedTransportTypes.isNotEmpty) {
+      return transports
+          .where((t) => selectedTransportTypes.contains(t.type))
+          .toList();
+    }
+    return transports;
+  });
+});

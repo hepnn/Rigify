@@ -1,22 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rigify/app/realtime/provider/transport_service.dart';
 import 'package:rigify/app/realtime/ui/transport_map.dart';
+import 'package:rigify/app/realtime/widgets/transport_type_filter.dart';
 
-class TransportPage extends StatefulWidget {
+class TransportPage extends ConsumerStatefulWidget {
   const TransportPage({super.key});
 
   @override
-  State<TransportPage> createState() => _TransportPageState();
+  ConsumerState<TransportPage> createState() => _TransportPageState();
 }
 
-class _TransportPageState extends State<TransportPage> {
+class _TransportPageState extends ConsumerState<TransportPage> {
   final TextEditingController _searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    final transportsAsync = ref.watch(transportsStreamProvider);
+
     return Scaffold(
       body: SafeArea(
         child: Stack(
           children: [
-            TransportMap(),
+            transportsAsync.when(
+              data: (transports) {
+                return TransportMap(transports: transports);
+              },
+              error: (error, stackTrace) => Container(
+                color: Colors.red,
+                child: Center(
+                  child: Text(
+                    error.toString(),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+              loading: () => const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
             Column(
               children: [
                 const Spacer(),
@@ -37,6 +59,13 @@ class _TransportPageState extends State<TransportPage> {
                 ),
               ],
             ),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TransportTypeFilter(),
+                _SettingList(),
+              ],
+            ),
           ],
         ),
       ),
@@ -50,50 +79,25 @@ class _TransportPageState extends State<TransportPage> {
   }
 }
 
-class _SelectTransportItem extends StatelessWidget {
-  final IconData icon;
-  final Color iconColor;
-  final VoidCallback onTap;
-  final bool isSelected;
-
-  const _SelectTransportItem({
-    required this.icon,
-    required this.onTap,
-    required this.iconColor,
-    required this.isSelected,
-  });
+class _SettingList extends StatelessWidget {
+  const _SettingList({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Card(
-        elevation: 8,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-          decoration: BoxDecoration(
-            color: isSelected ? Colors.grey[900] : null,
-            borderRadius: BorderRadius.circular(10),
+    return PopupMenuButton(
+      iconColor: Colors.grey[700],
+      iconSize: 32,
+      icon: const Icon(Icons.settings_rounded),
+      itemBuilder: (context) {
+        return [
+          const PopupMenuItem(
+            child: Text('Settings'),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Icon(
-                  icon,
-                  color: iconColor,
-                  size: 24,
-                ),
-              ),
-            ],
+          const PopupMenuItem(
+            child: Text('About'),
           ),
-        ),
-      ),
+        ];
+      },
     );
   }
 }
