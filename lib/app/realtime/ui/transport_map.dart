@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:rigify/api_config.dart';
 import 'package:rigify/app/realtime/model/transport_model.dart';
+import 'package:rigify/theme/theme_mode_state.dart';
 
 class TransportMap extends StatefulWidget {
   final List<Transport> transports;
 
-  TransportMap({
+  const TransportMap({
     super.key,
     required this.transports,
   });
@@ -42,12 +45,19 @@ class _TransportMapState extends State<TransportMap> {
         maxZoom: 18,
       ),
       children: [
-        TileLayer(
-          urlTemplate:
-              'https://api.mapbox.com/styles/v1/mapbox/navigation-night-v1/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZmp4cyIsImEiOiJjbG56MXZlcGQwMXNnMmlvM3V2bWU5eXRjIn0.L8IMnQbPOW53sbeDPx9R7A',
-          subdomains: const ['a', 'b', 'c'],
-          // tilesContainerBuilder: darkModeTilesContainerBuilder,
-          backgroundColor: Colors.transparent,
+        Consumer(
+          builder: (BuildContext context, WidgetRef ref, Widget? child) {
+            final isDarkMode = ref.watch(themeProvider).isDarkMode;
+            final urlTemplate = isDarkMode
+                ? ApiConfig.mapTemplateDark
+                : ApiConfig.mapTemplateLight;
+
+            return TileLayer(
+              urlTemplate: urlTemplate,
+              subdomains: const ['a', 'b', 'c'],
+              backgroundColor: Colors.transparent,
+            );
+          },
         ),
         MarkerClusterLayerWidget(
           options: MarkerClusterLayerOptions(
