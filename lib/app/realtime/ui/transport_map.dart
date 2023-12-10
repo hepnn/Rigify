@@ -67,43 +67,7 @@ class _TransportMapState extends ConsumerState<TransportMap> {
         interactiveFlags: InteractiveFlag.all,
         maxZoom: 18,
       ),
-      children: [
-        TileLayer(
-          urlTemplate: urlTemplate,
-          subdomains: const ['a', 'b', 'c'],
-          backgroundColor: Colors.transparent,
-        ),
-        PolylineLayer(
-          polylines: [
-            Polyline(
-              points: polylineCoordinates,
-              strokeWidth: 6.0,
-              color: polylineColor ?? Colors.transparent,
-            ),
-          ],
-        ),
-        MarkerClusterLayerWidget(
-          options: MarkerClusterLayerOptions(
-            markers: _buildMarkers(
-              transports: widget.transports,
-              rotation: _rotation ?? 0,
-            ),
-            anchor: AnchorPos.align(AnchorAlign.center),
-            disableClusteringAtZoom: 13,
-            builder: (context, markers) {
-              return FloatingActionButton(
-                onPressed: null,
-                heroTag: null,
-                backgroundColor: Colors.teal,
-                foregroundColor: Colors.white,
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(markers.length.toString()),
-                ),
-              );
-            },
-          ),
-        ),
+      nonRotatedChildren: [
         Column(
           children: [
             const Spacer(),
@@ -142,6 +106,44 @@ class _TransportMapState extends ConsumerState<TransportMap> {
               ),
             ),
           ],
+        ),
+      ],
+      children: [
+        TileLayer(
+          urlTemplate: urlTemplate,
+          subdomains: const ['a', 'b', 'c'],
+          backgroundColor: Colors.transparent,
+        ),
+        PolylineLayer(
+          polylines: [
+            Polyline(
+              points: polylineCoordinates,
+              strokeWidth: 6.0,
+              color: polylineColor ?? Colors.transparent,
+            ),
+          ],
+        ),
+        MarkerClusterLayerWidget(
+          options: MarkerClusterLayerOptions(
+            markers: _buildMarkers(
+              transports: widget.transports,
+              rotation: _rotation ?? 0,
+            ),
+            anchor: AnchorPos.align(AnchorAlign.center),
+            disableClusteringAtZoom: 13,
+            builder: (context, markers) {
+              return FloatingActionButton(
+                onPressed: null,
+                heroTag: null,
+                backgroundColor: Colors.teal,
+                foregroundColor: Colors.white,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(markers.length.toString()),
+                ),
+              );
+            },
+          ),
         ),
       ],
     );

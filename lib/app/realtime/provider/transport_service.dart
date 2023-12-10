@@ -43,10 +43,9 @@ final transportsStreamProvider =
   }).asyncMap((event) async => await event);
 
   return Stream.value(initialFetch).asyncExpand((initial) async* {
-    yield await initial; // Emit the result of the initial fetch
-    yield* periodicFetch; // Then continue with the periodic fetch stream
+    yield await initial;
+    yield* periodicFetch;
   }).map((transports) {
-    // Apply the filter based on the selected transport types
     if (selectedTransportTypes.isNotEmpty) {
       return transports
           .where((t) => selectedTransportTypes.contains(t.type))
