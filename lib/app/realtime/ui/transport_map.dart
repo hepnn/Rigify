@@ -6,10 +6,14 @@ import 'package:latlong2/latlong.dart';
 import 'package:rigify/api_config.dart';
 import 'package:rigify/app/realtime/model/transport_model.dart';
 import 'package:rigify/app/realtime/provider/location_provider.dart';
+import 'package:rigify/app/realtime/provider/polyline_provider.dart';
+import 'package:rigify/app/realtime/util/polyline_codec.dart';
 import 'package:rigify/app/realtime/widgets/user_location_marker.dart';
 import 'package:rigify/theme/theme_mode_state.dart';
 
-final selectedTransportProvider = StateProvider<String?>((ref) => null);
+final selectedTransportProvider = StateProvider<Transport?>((ref) => null);
+final selectedTransportIdProvider =
+    StateProvider.autoDispose<String?>((ref) => null);
 
 class TransportMap extends ConsumerStatefulWidget {
   final List<Transport> transports;
@@ -27,6 +31,7 @@ class _TransportMapState extends ConsumerState<TransportMap> {
   late final MapController _mapController;
   Marker? _userLocationMarker;
   double? _rotation;
+  List<LatLng> polylineCoordinates = [];
 
   @override
   void initState() {
@@ -58,6 +63,15 @@ class _TransportMapState extends ConsumerState<TransportMap> {
           urlTemplate: urlTemplate,
           subdomains: const ['a', 'b', 'c'],
           backgroundColor: Colors.transparent,
+        ),
+        PolylineLayer(
+          polylines: [
+            Polyline(
+              points: polylineCoordinates,
+              strokeWidth: 4.0,
+              color: Colors.blue,
+            ),
+          ],
         ),
         MarkerClusterLayerWidget(
           options: MarkerClusterLayerOptions(
@@ -107,7 +121,7 @@ class _TransportMapState extends ConsumerState<TransportMap> {
                         _mapController.move(
                           userLocation,
                           15.0,
-                        ); // Adjust zoom level as needed
+                        );
                       });
                     },
                     heroTag: null,
@@ -137,16 +151,23 @@ class _TransportMapState extends ConsumerState<TransportMap> {
           builder: (context) => _TransportIcon(
             transport: transport,
             rotation: rotation,
-            onSelected: () {
-              ref.read(selectedTransportProvider.notifier).state =
-                  transport.vehicleId;
+            onSelected: () async {
+              ref.read(selectedTransportProvider.notifier).state = transport;
               _mapController.move(
                 LatLng(transport.latitude, transport.longitude),
                 18,
               );
+              final transportLine =
+                  TransportLine(type: TransportType.bus, number: 23);
+              final polylines = await ref
+                  .watch(polylineRepositoryProvider)
+                  .fetchPolylines(transportLine, 'a-b');
+
+              polylineCoordinates = decodePolyline(polylines);
+              setState(() {});
             },
-            isSelected:
-                ref.read(selectedTransportProvider) == transport.vehicleId,
+            isSelected: ref.read(selectedTransportProvider)?.vehicleId ==
+                transport.vehicleId,
           ),
         ),
     ];
@@ -195,8 +216,8 @@ class _TransportIcon extends StatelessWidget {
                       topLeft: Radius.circular(200),
                     ),
                     border: Border.all(
-                      color: Colors.white, // Set the color of the white outline
-                      width: 2.0, // Set the width of the white outline
+                      color: Colors.white,
+                      width: 2.0,
                     ),
                   )
                 : null,

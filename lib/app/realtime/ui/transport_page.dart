@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:rigify/app/realtime/provider/location_provider.dart';
 import 'package:rigify/app/realtime/provider/transport_service.dart';
 import 'package:rigify/app/realtime/ui/transport_map.dart';
+import 'package:rigify/app/realtime/widgets/transport_info_sheet.dart';
 import 'package:rigify/app/realtime/widgets/transport_type_filter.dart';
 
 class TransportPage extends ConsumerStatefulWidget {
@@ -18,6 +18,7 @@ class _TransportPageState extends ConsumerState<TransportPage> {
   @override
   Widget build(BuildContext context) {
     final transportsAsync = ref.watch(transportsStreamProvider);
+    final selectedTransport = ref.watch(selectedTransportProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -47,6 +48,15 @@ class _TransportPageState extends ConsumerState<TransportPage> {
                 _SettingList(),
               ],
             ),
+            if (selectedTransport != null)
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: TransportInfoSheet(
+                  transport: selectedTransport,
+                ),
+              ),
           ],
         ),
       ),

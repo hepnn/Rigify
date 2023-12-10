@@ -442,7 +442,7 @@ packages:
     source: hosted
     version: "3.6.10"
   fixnum:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: fixnum
       sha256: "25517a4deb0c03aa0f32fd12db525856438902d9c16536311e76cdc57b31d7d1"
@@ -1165,6 +1165,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  simplify:
+    dependency: "direct main"
+    description:
+      name: simplify
+      sha256: "2826e8e785995791cadcd743da88c5fe56bbd71656472cb4c9101a87d7bbd535"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   sky_engine:
     dependency: transitive
     description: flutter
