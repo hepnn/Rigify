@@ -7,13 +7,10 @@ import 'package:rigify/api_config.dart';
 import 'package:rigify/app/realtime/model/transport_model.dart';
 import 'package:rigify/app/realtime/provider/location_provider.dart';
 import 'package:rigify/app/realtime/provider/polyline_provider.dart';
-import 'package:rigify/app/realtime/util/polyline_codec.dart';
 import 'package:rigify/app/realtime/widgets/user_location_marker.dart';
 import 'package:rigify/theme/theme_mode_state.dart';
 
 final selectedTransportProvider = StateProvider<Transport?>((ref) => null);
-final selectedTransportIdProvider =
-    StateProvider.autoDispose<String?>((ref) => null);
 
 class TransportMap extends ConsumerStatefulWidget {
   final List<Transport> transports;
@@ -50,6 +47,18 @@ class _TransportMapState extends ConsumerState<TransportMap> {
     final isDarkMode = ref.watch(themeProvider).isDarkMode;
     final urlTemplate =
         isDarkMode ? ApiConfig.mapTemplateDark : ApiConfig.mapTemplateLight;
+    final selectedTransport = ref.read(selectedTransportProvider);
+    final polylineColor = selectedTransport?.type.color.withOpacity(0.4);
+
+    ref.listen<Transport?>(selectedTransportProvider, (_, selectedTransport) {
+      if (selectedTransport == null) {
+        setState(() {
+          polylineCoordinates.clear();
+        });
+      } else {
+        _loadAndSetPolylines(selectedTransport);
+      }
+    });
 
     return FlutterMap(
       mapController: _mapController,
@@ -69,7 +78,7 @@ class _TransportMapState extends ConsumerState<TransportMap> {
             Polyline(
               points: polylineCoordinates,
               strokeWidth: 4.0,
-              color: Colors.blue,
+              color: polylineColor ?? Colors.transparent,
             ),
           ],
         ),
@@ -157,14 +166,6 @@ class _TransportMapState extends ConsumerState<TransportMap> {
                 LatLng(transport.latitude, transport.longitude),
                 18,
               );
-              final transportLine =
-                  TransportLine(type: TransportType.bus, number: 23);
-              final polylines = await ref
-                  .watch(polylineRepositoryProvider)
-                  .fetchPolylines(transportLine, 'a-b');
-
-              polylineCoordinates = decodePolyline(polylines);
-              setState(() {});
             },
             isSelected: ref.read(selectedTransportProvider)?.vehicleId ==
                 transport.vehicleId,
@@ -175,6 +176,19 @@ class _TransportMapState extends ConsumerState<TransportMap> {
       markers.add(_userLocationMarker!);
     }
     return markers;
+  }
+
+  void _loadAndSetPolylines(Transport transport) async {
+    final transportLine = TransportLine(
+      type: transport.type,
+      number: transport.number ?? 0,
+    );
+    final polylines = await ref
+        .watch(polylineRepositoryProvider)
+        .fetchPolylines(transportLine, 'a-b');
+    setState(() {
+      polylineCoordinates = polylines;
+    });
   }
 }
 
