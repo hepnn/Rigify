@@ -53,6 +53,7 @@ dependencies:
   flutter_map_marker_cluster: ^1.1.0
   riverpod_annotation:
   bottom_sheet: ^4.0.0
+  geolocator: ^10.1.0
 
 dev_dependencies:
   flutter_test:

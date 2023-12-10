@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rigify/app/realtime/provider/location_provider.dart';
 import 'package:rigify/app/realtime/provider/transport_service.dart';
 import 'package:rigify/app/realtime/ui/transport_map.dart';
 import 'package:rigify/app/realtime/widgets/transport_type_filter.dart';
@@ -38,26 +39,6 @@ class _TransportPageState extends ConsumerState<TransportPage> {
               loading: () => const Center(
                 child: CircularProgressIndicator(),
               ),
-            ),
-            Column(
-              children: [
-                const Spacer(),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      FloatingActionButton(
-                        onPressed: () {},
-                        heroTag: null,
-                        backgroundColor: Colors.teal,
-                        foregroundColor: Colors.white,
-                        child: const Icon(Icons.my_location),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
             ),
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

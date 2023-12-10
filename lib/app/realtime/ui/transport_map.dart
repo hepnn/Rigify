@@ -5,9 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:rigify/api_config.dart';
 import 'package:rigify/app/realtime/model/transport_model.dart';
+import 'package:rigify/app/realtime/provider/location_provider.dart';
+import 'package:rigify/app/realtime/widgets/user_location_marker.dart';
 import 'package:rigify/theme/theme_mode_state.dart';
 
-class TransportMap extends StatefulWidget {
+class TransportMap extends ConsumerStatefulWidget {
   final List<Transport> transports;
 
   const TransportMap({
@@ -16,11 +18,12 @@ class TransportMap extends StatefulWidget {
   });
 
   @override
-  State<TransportMap> createState() => _TransportMapState();
+  ConsumerState<TransportMap> createState() => _TransportMapState();
 }
 
-class _TransportMapState extends State<TransportMap> {
+class _TransportMapState extends ConsumerState<TransportMap> {
   late final MapController _mapController;
+  Marker? _userLocationMarker;
   double? _rotation;
 
   @override
@@ -37,6 +40,10 @@ class _TransportMapState extends State<TransportMap> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = ref.watch(themeProvider).isDarkMode;
+    final urlTemplate =
+        isDarkMode ? ApiConfig.mapTemplateDark : ApiConfig.mapTemplateLight;
+
     return FlutterMap(
       mapController: _mapController,
       options: MapOptions(
@@ -45,19 +52,10 @@ class _TransportMapState extends State<TransportMap> {
         maxZoom: 18,
       ),
       children: [
-        Consumer(
-          builder: (BuildContext context, WidgetRef ref, Widget? child) {
-            final isDarkMode = ref.watch(themeProvider).isDarkMode;
-            final urlTemplate = isDarkMode
-                ? ApiConfig.mapTemplateDark
-                : ApiConfig.mapTemplateLight;
-
-            return TileLayer(
-              urlTemplate: urlTemplate,
-              subdomains: const ['a', 'b', 'c'],
-              backgroundColor: Colors.transparent,
-            );
-          },
+        TileLayer(
+          urlTemplate: urlTemplate,
+          subdomains: const ['a', 'b', 'c'],
+          backgroundColor: Colors.transparent,
         ),
         MarkerClusterLayerWidget(
           options: MarkerClusterLayerOptions(
@@ -81,6 +79,45 @@ class _TransportMapState extends State<TransportMap> {
             },
           ),
         ),
+        Column(
+          children: [
+            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  FloatingActionButton(
+                    onPressed: () async {
+                      LatLng userLocation = await ref
+                          .read(locationRepositoryProvider)
+                          .getCurrentLocation();
+                      setState(() {
+                        _userLocationMarker = Marker(
+                          point: userLocation,
+                          builder: (ctx) => LocationIndicator(
+                            location: userLocation,
+                          ),
+                          width: 40,
+                          height: 40,
+                          anchorPos: AnchorPos.align(AnchorAlign.center),
+                        );
+                        _mapController.move(
+                          userLocation,
+                          15.0,
+                        ); // Adjust zoom level as needed
+                      });
+                    },
+                    heroTag: null,
+                    backgroundColor: Colors.teal,
+                    foregroundColor: Colors.white,
+                    child: const Icon(Icons.my_location),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -89,7 +126,7 @@ class _TransportMapState extends State<TransportMap> {
     required List<Transport> transports,
     required double rotation,
   }) {
-    return [
+    List<Marker> markers = [
       for (final transport in transports)
         Marker(
           key: ObjectKey(transport),
@@ -107,6 +144,10 @@ class _TransportMapState extends State<TransportMap> {
           ),
         ),
     ];
+    if (_userLocationMarker != null) {
+      markers.add(_userLocationMarker!);
+    }
+    return markers;
   }
 }
 
