@@ -9,6 +9,8 @@ import 'package:rigify/app/realtime/provider/location_provider.dart';
 import 'package:rigify/app/realtime/widgets/user_location_marker.dart';
 import 'package:rigify/theme/theme_mode_state.dart';
 
+final selectedTransportProvider = StateProvider<String?>((ref) => null);
+
 class TransportMap extends ConsumerStatefulWidget {
   final List<Transport> transports;
 
@@ -136,11 +138,15 @@ class _TransportMapState extends ConsumerState<TransportMap> {
             transport: transport,
             rotation: rotation,
             onSelected: () {
+              ref.read(selectedTransportProvider.notifier).state =
+                  transport.vehicleId;
               _mapController.move(
                 LatLng(transport.latitude, transport.longitude),
                 18,
               );
             },
+            isSelected:
+                ref.read(selectedTransportProvider) == transport.vehicleId,
           ),
         ),
     ];
@@ -155,11 +161,13 @@ class _TransportIcon extends StatelessWidget {
   final Transport transport;
   final double rotation;
   final VoidCallback onSelected;
+  final bool isSelected;
 
   const _TransportIcon({
     required this.transport,
     required this.rotation,
     required this.onSelected,
+    this.isSelected = false,
   });
 
   @override
@@ -178,27 +186,42 @@ class _TransportIcon extends StatelessWidget {
             topLeft: Radius.circular(200),
           ),
           color: transport.type.color,
-          child: Center(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Padding(
-                padding: const EdgeInsets.all(4),
-                child: Transform.rotate(
-                  angle: -angle,
-                  child: RotationTransition(
-                    turns: AlwaysStoppedAnimation(-rotation / 360),
-                    child: transport.isKnown
-                        ? Text(
-                            transport.number.toString(),
-                            style: const TextStyle(
+          child: Container(
+            decoration: isSelected
+                ? BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(200),
+                      bottomRight: Radius.circular(200),
+                      topLeft: Radius.circular(200),
+                    ),
+                    border: Border.all(
+                      color: Colors.white, // Set the color of the white outline
+                      width: 2.0, // Set the width of the white outline
+                    ),
+                  )
+                : null,
+            child: Center(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: Transform.rotate(
+                    angle: -angle,
+                    child: RotationTransition(
+                      turns: AlwaysStoppedAnimation(-rotation / 360),
+                      child: transport.isKnown
+                          ? Text(
+                              transport.number.toString(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          : const Icon(
+                              Icons.question_mark,
                               color: Colors.white,
-                              fontWeight: FontWeight.bold,
                             ),
-                          )
-                        : const Icon(
-                            Icons.question_mark,
-                            color: Colors.white,
-                          ),
+                    ),
                   ),
                 ),
               ),
