@@ -26,7 +26,9 @@ class _TransportPageState extends ConsumerState<TransportPage> {
           children: [
             transportsAsync.when(
               data: (transports) {
-                return TransportMap(transports: transports);
+                return TransportMap(
+                  transports: transports,
+                );
               },
               error: (error, stackTrace) => Container(
                 color: Colors.red,
@@ -56,7 +58,12 @@ class _TransportPageState extends ConsumerState<TransportPage> {
                       isScrollControlled: true,
                       builder: (context) {
                         return Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding: EdgeInsets.only(
+                            top: 16.0,
+                            left: 16,
+                            right: 16,
+                            bottom: MediaQuery.of(context).viewInsets.bottom,
+                          ),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -69,7 +76,9 @@ class _TransportPageState extends ConsumerState<TransportPage> {
                               ),
                               const SizedBox(height: 16),
                               ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  ref.read(searchTransportProvider).
+                                },
                                 child: const Text('Search'),
                               ),
                             ],

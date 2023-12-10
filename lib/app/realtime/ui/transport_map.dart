@@ -12,13 +12,12 @@ import 'package:rigify/theme/theme_mode_state.dart';
 
 final selectedTransportProvider = StateProvider<Transport?>((ref) => null);
 
+final searchTransportProvider = StateProvider<String?>((ref) => null);
+
 class TransportMap extends ConsumerStatefulWidget {
   final List<Transport> transports;
 
-  const TransportMap({
-    super.key,
-    required this.transports,
-  });
+  const TransportMap({super.key, required this.transports});
 
   @override
   ConsumerState<TransportMap> createState() => _TransportMapState();
@@ -58,6 +57,12 @@ class _TransportMapState extends ConsumerState<TransportMap> {
       } else {
         _loadAndSetPolylines(selectedTransport);
       }
+    });
+
+    ref.listen<String?>(searchTransportProvider, (_, searchTransport) {
+      if (searchTransport == null) {
+        _searchAndZoomIn(searchTransport ?? ' ');
+      } else {}
     });
 
     return FlutterMap(
@@ -197,6 +202,30 @@ class _TransportMapState extends ConsumerState<TransportMap> {
       setState(() {
         polylineCoordinates.clear();
       });
+    }
+  }
+
+  void _searchAndZoomIn(String searchQuery) {
+    print(searchQuery);
+    final List<Transport> transports = widget.transports;
+    final Transport foundTransport = transports.firstWhere(
+      (transport) =>
+          transport.vehicleId == searchQuery ||
+          transport.number.toString() == searchQuery,
+    );
+
+    if (foundTransport != null) {
+      setState(() {
+        _mapController.move(
+          LatLng(foundTransport.latitude, foundTransport.longitude),
+          18.0, // Zoom level
+        );
+      });
+    } else {
+      // Handle the case where the transport is not found
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Transport not found')),
+      );
     }
   }
 }
