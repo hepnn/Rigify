@@ -41,10 +41,44 @@ class _TransportPageState extends ConsumerState<TransportPage> {
                 child: CircularProgressIndicator(),
               ),
             ),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TransportTypeFilter(),
+                const TransportTypeFilter(),
+                const Spacer(),
+                _IconContainer(
+                  icon: Icons.search_rounded,
+                  iconColor: Colors.grey.shade500,
+                  color: Colors.white,
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (context) {
+                        return Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextField(
+                                controller: _searchController,
+                                decoration: const InputDecoration(
+                                  hintText: 'Search',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              ElevatedButton(
+                                onPressed: () {},
+                                child: const Text('Search'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
                 _SettingList(),
               ],
             ),
@@ -75,20 +109,72 @@ class _SettingList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PopupMenuButton(
-      iconColor: Colors.grey[700],
-      iconSize: 32,
-      icon: const Icon(Icons.settings_rounded),
-      itemBuilder: (context) {
-        return [
-          const PopupMenuItem(
-            child: Text('Settings'),
-          ),
-          const PopupMenuItem(
-            child: Text('About'),
-          ),
-        ];
+    return _IconContainer(
+      icon: Icons.settings_rounded,
+      iconColor: Colors.grey.shade500,
+      color: Colors.white,
+      onTap: () {
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          builder: (context) {
+            return const _SearchModal();
+          },
+        );
       },
+    );
+  }
+}
+
+class _SearchModal extends StatelessWidget {
+  const _SearchModal({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
+class _IconContainer extends StatelessWidget {
+  final IconData icon;
+  final Color iconColor;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _IconContainer({
+    super.key,
+    required this.icon,
+    required this.iconColor,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        elevation: 8,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          decoration: BoxDecoration(
+            color: null,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Icon(
+              icon,
+              color: iconColor,
+              size: 20,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

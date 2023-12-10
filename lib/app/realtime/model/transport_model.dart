@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 
 enum TransportType {
-  unknown(color: Colors.grey),
-  bus(color: Color(0xFFf4B427)),
-  tram(color: Color(0xFFff000C)),
-  trolley(color: Color(0xFF009dE0));
+  unknown(color: Colors.grey, icon: Icons.directions_bus),
+  bus(color: Color(0xFFf4B427), icon: Icons.directions_bus),
+  tram(color: Color(0xFFff000C), icon: Icons.tram),
+  trolley(color: Color(0xFF009dE0), icon: Icons.directions_bus_filled);
 
   final Color color;
+  final IconData icon;
 
-  const TransportType({required this.color});
+  const TransportType({
+    required this.color,
+    required this.icon,
+  });
 }
 
 enum TransportStatus {

@@ -77,7 +77,7 @@ class _TransportMapState extends ConsumerState<TransportMap> {
           polylines: [
             Polyline(
               points: polylineCoordinates,
-              strokeWidth: 4.0,
+              strokeWidth: 6.0,
               color: polylineColor ?? Colors.transparent,
             ),
           ],
@@ -134,8 +134,8 @@ class _TransportMapState extends ConsumerState<TransportMap> {
                       });
                     },
                     heroTag: null,
-                    backgroundColor: Colors.teal,
-                    foregroundColor: Colors.white,
+                    backgroundColor: const Color(0xff36323a),
+                    foregroundColor: Colors.blue,
                     child: const Icon(Icons.my_location),
                   ),
                 ],
@@ -179,16 +179,23 @@ class _TransportMapState extends ConsumerState<TransportMap> {
   }
 
   void _loadAndSetPolylines(Transport transport) async {
-    final transportLine = TransportLine(
-      type: transport.type,
-      number: transport.number ?? 0,
-    );
-    final polylines = await ref
-        .watch(polylineRepositoryProvider)
-        .fetchPolylines(transportLine, 'a-b');
-    setState(() {
-      polylineCoordinates = polylines;
-    });
+    if (transport.number != null && transport.number != 0) {
+      final transportLine = TransportLine(
+        type: transport.type,
+        number: transport.number ?? -1,
+      );
+      final polylines = await ref
+          .watch(polylineRepositoryProvider)
+          .fetchPolylines(transportLine, 'a-b');
+      setState(() {
+        polylineCoordinates = polylines;
+      });
+    } else {
+      // If the transport number is unknown, clear the existing polylines
+      setState(() {
+        polylineCoordinates.clear();
+      });
+    }
   }
 }
 

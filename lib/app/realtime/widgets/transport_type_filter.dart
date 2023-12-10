@@ -3,12 +3,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rigify/app/realtime/model/transport_model.dart';
 import 'package:rigify/app/realtime/provider/transport_service.dart';
 
+final isInitialSetupDoneProvider = StateProvider<bool>((ref) => false);
+
 class TransportTypeFilter extends ConsumerWidget {
   const TransportTypeFilter({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isInitialSetupDone = ref.watch(isInitialSetupDoneProvider);
     final selectedTypes = ref.watch(selectedTransportTypesProvider);
+
+    if (!isInitialSetupDone && selectedTypes.isEmpty) {
+      Future.microtask(() {
+        ref.read(selectedTransportTypesProvider.notifier).state = Set.from(
+          TransportType.values.where((type) => type != TransportType.unknown),
+        );
+        ref.read(isInitialSetupDoneProvider.notifier).state = true;
+      });
+    }
 
     final typeWidgets = TransportType.values
         .where((type) => type != TransportType.unknown)
@@ -17,17 +29,17 @@ class TransportTypeFilter extends ConsumerWidget {
       return _SelectTransportItem(
         onTap: () {
           final currentTypes =
-              ref.read(selectedTransportTypesProvider.state).state;
+              ref.read(selectedTransportTypesProvider.notifier).state;
           if (isSelected) {
             currentTypes.remove(type);
           } else {
             currentTypes.add(type);
           }
-          ref.read(selectedTransportTypesProvider.state).state = {
+          ref.read(selectedTransportTypesProvider.notifier).state = {
             ...currentTypes
           };
         },
-        icon: Icons.directions_bus,
+        icon: type.icon,
         iconColor: isSelected ? type.color : Colors.grey,
         color: isSelected ? type.color.withOpacity(0.2) : Colors.white,
         isSelected: isSelected,
@@ -77,7 +89,7 @@ class _SelectTransportItem extends StatelessWidget {
             child: Icon(
               icon,
               color: iconColor,
-              size: 24,
+              size: 20,
             ),
           ),
         ),

@@ -11,6 +11,12 @@ const Map<String, Color> colors = {
   'nightbus': Color(0xFFBBBBBB),
 };
 
+const Map<String, IconData> icons = {
+  'bus': Icons.directions_bus,
+  'tram': Icons.tram,
+  'trol': Icons.directions_bus_filled,
+};
+
 Map<String, String> getTransportType(BuildContext context, String name) {
   final lang = AppLocalizations.of(context)!;
 
