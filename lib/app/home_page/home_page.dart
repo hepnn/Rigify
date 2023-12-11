@@ -215,18 +215,13 @@ class _HomePageState extends ConsumerState<HomePage> {
                     itemCount: transportNames.length + 1,
                     itemBuilder: (context, i) {
                       if (i == transportNames.length) {
-                        return GridItem(
-                          title: 'Realtime Map',
-                          iconColor: Colors.grey,
-                          icon: Icons.map,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const TransportPage(),
-                              ),
-                            );
-                          },
+                        return MapGridItem(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const TransportPage(),
+                            ),
+                          ),
                         );
                       }
 

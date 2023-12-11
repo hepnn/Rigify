@@ -10,9 +10,11 @@ import 'package:rigify/app/realtime/provider/polyline_provider.dart';
 import 'package:rigify/app/realtime/widgets/user_location_marker.dart';
 import 'package:rigify/theme/theme_mode_state.dart';
 
-final selectedTransportProvider = StateProvider<Transport?>((ref) => null);
+final selectedTransportProvider =
+    StateProvider.autoDispose<Transport?>((ref) => null);
 
-final searchTransportProvider = StateProvider<String?>((ref) => null);
+final searchTransportProvider =
+    StateProvider.autoDispose<String?>((ref) => null);
 
 class TransportMap extends ConsumerStatefulWidget {
   final List<Transport> transports;
@@ -60,8 +62,8 @@ class _TransportMapState extends ConsumerState<TransportMap> {
     });
 
     ref.listen<String?>(searchTransportProvider, (_, searchTransport) {
-      if (searchTransport == null) {
-        _searchAndZoomIn(searchTransport ?? ' ');
+      if (searchTransport != null) {
+        _searchAndZoomIn(searchTransport);
       } else {}
     });
 
@@ -206,27 +208,36 @@ class _TransportMapState extends ConsumerState<TransportMap> {
   }
 
   void _searchAndZoomIn(String searchQuery) {
-    print(searchQuery);
     final List<Transport> transports = widget.transports;
     final Transport foundTransport = transports.firstWhere(
+      // TODO: Find all and add ability to navigate between all
       (transport) =>
           transport.vehicleId == searchQuery ||
           transport.number.toString() == searchQuery,
+      orElse: () => Transport.empty(),
     );
 
-    if (foundTransport != null) {
+    if (foundTransport.number != null) {
       setState(() {
         _mapController.move(
           LatLng(foundTransport.latitude, foundTransport.longitude),
           18.0, // Zoom level
         );
+        ref.read(selectedTransportProvider.notifier).state = foundTransport;
       });
     } else {
-      // Handle the case where the transport is not found
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Transport not found')),
+        const SnackBar(
+          content: Text('No results found'), // TODO: localize
+        ),
       );
     }
+  }
+
+  @override
+  void dispose() {
+    _mapController.dispose();
+    super.dispose();
   }
 }
 

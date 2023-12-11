@@ -1,17 +1,31 @@
 import 'package:flutter/material.dart';
 
 enum TransportType {
-  unknown(color: Colors.grey, icon: Icons.directions_bus),
-  bus(color: Color(0xFFf4B427), icon: Icons.directions_bus),
-  tram(color: Color(0xFFff000C), icon: Icons.tram),
-  trolley(color: Color(0xFF009dE0), icon: Icons.directions_bus_filled);
+  unknown(color: Colors.grey, icon: Icons.directions_bus, jsonName: ''),
+  bus(
+    color: Color(0xFFf4B427),
+    icon: Icons.directions_bus,
+    jsonName: 'bus',
+  ),
+  tram(
+    color: Color(0xFFff000C),
+    icon: Icons.tram,
+    jsonName: 'tram',
+  ),
+  trolley(
+    color: Color(0xFF009dE0),
+    icon: Icons.directions_bus_filled,
+    jsonName: 'trol',
+  );
 
   final Color color;
   final IconData icon;
+  final String jsonName;
 
   const TransportType({
     required this.color,
     required this.icon,
+    required this.jsonName,
   });
 }
 
@@ -56,6 +70,16 @@ class Transport {
       longitude: longitude,
       bearing: bearing,
       vehicleId: vehicleId,
+    );
+  }
+
+  factory Transport.empty() {
+    return Transport(
+      type: TransportType.unknown,
+      number: null,
+      latitude: 0.0,
+      longitude: 0.0,
+      vehicleId: '',
     );
   }
 

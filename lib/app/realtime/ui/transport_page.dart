@@ -31,11 +31,10 @@ class _TransportPageState extends ConsumerState<TransportPage> {
                 );
               },
               error: (error, stackTrace) => Container(
-                color: Colors.red,
+                color: Colors.black.withOpacity(0.3),
                 child: Center(
                   child: Text(
                     error.toString(),
-                    style: const TextStyle(color: Colors.white),
                   ),
                 ),
               ),
@@ -43,53 +42,59 @@ class _TransportPageState extends ConsumerState<TransportPage> {
                 child: CircularProgressIndicator(),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const TransportTypeFilter(),
-                const Spacer(),
-                _IconContainer(
-                  icon: Icons.search_rounded,
-                  iconColor: Colors.grey.shade500,
-                  color: Colors.white,
-                  onTap: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      builder: (context) {
-                        return Padding(
-                          padding: EdgeInsets.only(
-                            top: 16.0,
-                            left: 16,
-                            right: 16,
-                            bottom: MediaQuery.of(context).viewInsets.bottom,
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              TextField(
-                                controller: _searchController,
-                                decoration: const InputDecoration(
-                                  hintText: 'Search',
-                                  border: OutlineInputBorder(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const TransportTypeFilter(),
+                  const Spacer(),
+                  _IconContainer(
+                    icon: Icons.search_rounded,
+                    iconColor: Colors.grey.shade500,
+                    color: Colors.white,
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              top: 16,
+                              left: 16,
+                              right: 16,
+                              bottom: MediaQuery.of(context).viewInsets.bottom,
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextField(
+                                  controller: _searchController,
+                                  decoration: const InputDecoration(
+                                    hintText: 'Search for bus number or bus ID',
+                                    border: OutlineInputBorder(),
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 16),
-                              ElevatedButton(
-                                onPressed: () {
-                                  ref.read(searchTransportProvider).
-                                },
-                                child: const Text('Search'),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-                _SettingList(),
-              ],
+                                const SizedBox(height: 16),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    ref
+                                        .read(searchTransportProvider.notifier)
+                                        .update((_) => _searchController.text);
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Search'),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                  // const _SettingList(),
+                ],
+              ),
             ),
             if (selectedTransport != null)
               Positioned(
@@ -114,7 +119,7 @@ class _TransportPageState extends ConsumerState<TransportPage> {
 }
 
 class _SettingList extends StatelessWidget {
-  const _SettingList({super.key});
+  const _SettingList();
 
   @override
   Widget build(BuildContext context) {
@@ -122,25 +127,8 @@ class _SettingList extends StatelessWidget {
       icon: Icons.settings_rounded,
       iconColor: Colors.grey.shade500,
       color: Colors.white,
-      onTap: () {
-        showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          builder: (context) {
-            return const _SearchModal();
-          },
-        );
-      },
+      onTap: () {},
     );
-  }
-}
-
-class _SearchModal extends StatelessWidget {
-  const _SearchModal({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
   }
 }
 
@@ -151,7 +139,6 @@ class _IconContainer extends StatelessWidget {
   final VoidCallback onTap;
 
   const _IconContainer({
-    super.key,
     required this.icon,
     required this.iconColor,
     required this.color,
@@ -160,7 +147,7 @@ class _IconContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
       child: Card(
         elevation: 8,
@@ -179,7 +166,7 @@ class _IconContainer extends StatelessWidget {
             child: Icon(
               icon,
               color: iconColor,
-              size: 20,
+              size: 22,
             ),
           ),
         ),

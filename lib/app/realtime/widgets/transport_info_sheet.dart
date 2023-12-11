@@ -19,14 +19,11 @@ class TransportInfoSheet extends ConsumerStatefulWidget {
 class _TransportInfoSheetState extends ConsumerState<TransportInfoSheet> {
   @override
   Widget build(BuildContext context) {
-    var modalHeight = 100.0;
-    const minHeight = 100.0;
-    const maxHeight = 500.0;
-
     final route = routes.entries
         .firstWhere(
           (element) =>
-              element.value.number == widget.transport.number.toString(),
+              element.value.number == widget.transport.number.toString() &&
+              element.value.transport == widget.transport.type.jsonName,
           orElse: () => MapEntry('', RouteType.empty()),
         )
         .value;
@@ -44,22 +41,10 @@ class _TransportInfoSheetState extends ConsumerState<TransportInfoSheet> {
       date = separated[1];
     }
     return GestureDetector(
-      onVerticalDragUpdate: (details) {
-        setState(() {
-          modalHeight = (modalHeight - details.delta.dy)
-              .clamp(minHeight, maxHeight)
-              .toDouble();
-        });
-      },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
-        height: modalHeight,
         curve: Curves.easeInOut,
-        padding: const EdgeInsets.only(
-          bottom: 16,
-          left: 16,
-          right: 16,
-        ),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.grey[800],
           borderRadius: const BorderRadius.only(
@@ -127,6 +112,7 @@ class _TransportInfoSheetState extends ConsumerState<TransportInfoSheet> {
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
                 const SizedBox(height: 4),
