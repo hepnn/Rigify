@@ -7,14 +7,13 @@ import 'package:rigify/api_config.dart';
 import 'package:rigify/app/realtime/model/transport_model.dart';
 import 'package:rigify/app/realtime/provider/location_provider.dart';
 import 'package:rigify/app/realtime/provider/polyline_provider.dart';
+import 'package:rigify/app/realtime/provider/search_provider.dart';
 import 'package:rigify/app/realtime/widgets/user_location_marker.dart';
 import 'package:rigify/theme/theme_mode_state.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final selectedTransportProvider =
     StateProvider.autoDispose<Transport?>((ref) => null);
-
-final searchTransportProvider =
-    StateProvider.autoDispose<String?>((ref) => null);
 
 class TransportMap extends ConsumerStatefulWidget {
   final List<Transport> transports;
@@ -61,9 +60,9 @@ class _TransportMapState extends ConsumerState<TransportMap> {
       }
     });
 
-    ref.listen<String?>(searchTransportProvider, (_, searchTransport) {
-      if (searchTransport != null) {
-        _searchAndZoomIn(searchTransport);
+    ref.listen<SearchCriteria?>(searchTransportProvider, (_, searchCriteria) {
+      if (searchCriteria != null) {
+        _searchAndZoomIn(searchCriteria);
       } else {}
     });
 
@@ -207,13 +206,22 @@ class _TransportMapState extends ConsumerState<TransportMap> {
     }
   }
 
-  void _searchAndZoomIn(String searchQuery) {
+  void _searchAndZoomIn(SearchCriteria criteria) {
+    final lang = AppLocalizations.of(context)!;
     final List<Transport> transports = widget.transports;
-    final Transport foundTransport = transports.firstWhere(
-      // TODO: Find all and add ability to navigate between all
+
+    // Filter transports by transport type if specified.
+    final filteredTransports = criteria.transportType != TransportType.unknown
+        ? transports
+            .where((transport) => transport.type == criteria.transportType)
+            .toList()
+        : transports;
+
+    // Now, search within the filtered list.
+    final Transport foundTransport = filteredTransports.firstWhere(
       (transport) =>
-          transport.vehicleId == searchQuery ||
-          transport.number.toString() == searchQuery,
+          transport.vehicleId == criteria.searchText ||
+          transport.number.toString() == criteria.searchText,
       orElse: () => Transport.empty(),
     );
 
@@ -227,8 +235,8 @@ class _TransportMapState extends ConsumerState<TransportMap> {
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No results found'), // TODO: localize
+        SnackBar(
+          content: Text(lang.realtimeMapSearchNoResults),
         ),
       );
     }

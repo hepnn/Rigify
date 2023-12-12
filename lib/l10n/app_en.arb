@@ -4,6 +4,7 @@
     "bus": "Bus",
     "tramway": "Tramway",
     "trolleybus": "Trolleybus",
+    "all": "All",
     "favRoutesTitle": "Favourites",
     "favRoutesEmpty": "No favourites",
     "favRoutesInfo": "Long press on route or press heart icon to add to favourites",
@@ -38,5 +39,8 @@
     "nearestStopsTitle": "Nearest Stops",
     "favoriteDialogAdd": "Add to favourites",
     "favoriteDialogRemove": "Remove from favourites",
-    "routesPageErrorTitle": "Error, try reloading"
+    "routesPageErrorTitle": "Error, try reloading",
+    "realtimeMapSearchNoResults": "No results found",
+    "realtimeMapSearchPlaceholder": "Enter transport number or ID",
+    "realtimeMapSearchButton": "Search"
 }

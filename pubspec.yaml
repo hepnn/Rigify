@@ -56,6 +56,7 @@ dependencies:
   geolocator: ^10.1.0
   simplify: ^1.0.2
   fixnum: ^1.1.0
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:

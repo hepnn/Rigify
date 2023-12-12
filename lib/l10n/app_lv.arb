@@ -4,6 +4,7 @@
     "bus": "Autobuss",
     "tramway": "Tramvajs",
     "trolleybus": "Trolejbuss",
+    "all": "Visi",
     "favRoutesTitle": "Favorīti",
     "favRoutesEmpty": "Nav saglabātu maršutu",
     "favRoutesInfo": "Varat saglabāt maršutus, noklikšķinot uz sirsniņas ikonas maršuta nosaukumā.",
@@ -38,5 +39,8 @@
     "nearestStopsTitle": "Tuvākās pieturas",
     "favoriteDialogAdd": "Pievienot favorītiem",
     "favoriteDialogRemove": "Noņemt no favorītiem",
-    "routesPageErrorTitle": "Notika kļūda, mēģiniet restartēt"
+    "routesPageErrorTitle": "Notika kļūda, mēģiniet restartēt",
+    "realtimeMapSearchNoResults": "Transports netika atrasts",
+    "realtimeMapSearchPlaceholder": "Ievadiet transporta numuru vai ID",
+    "realtimeMapSearchButton": "Meklēt"
 }

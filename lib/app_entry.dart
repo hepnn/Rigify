@@ -14,12 +14,6 @@ class AppEntry extends StatefulWidget {
 class _AppEntryState extends State<AppEntry> {
   int _selectedIndex = 1;
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   static const List<Widget> _widgetOptions = [
     FavoritePage(),
     HomePage(),

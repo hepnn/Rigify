@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rigify/app/realtime/model/transport_model.dart';
+import 'package:rigify/app/realtime/provider/search_provider.dart';
 import 'package:rigify/app/realtime/provider/transport_service.dart';
 import 'package:rigify/app/realtime/ui/transport_map.dart';
 import 'package:rigify/app/realtime/widgets/transport_info_sheet.dart';
 import 'package:rigify/app/realtime/widgets/transport_type_filter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TransportPage extends ConsumerStatefulWidget {
   const TransportPage({super.key});
@@ -17,8 +20,31 @@ class _TransportPageState extends ConsumerState<TransportPage> {
 
   @override
   Widget build(BuildContext context) {
+    final lang = AppLocalizations.of(context)!;
+
     final transportsAsync = ref.watch(transportsStreamProvider);
     final selectedTransport = ref.watch(selectedTransportProvider);
+
+    TransportType dropdownvalue = TransportType.unknown;
+
+    final List<DropdownMenuItem<TransportType>> list = [
+      DropdownMenuItem(
+        value: TransportType.bus,
+        child: Text(lang.bus),
+      ),
+      DropdownMenuItem(
+        value: TransportType.tram,
+        child: Text(lang.tramway),
+      ),
+      DropdownMenuItem(
+        value: TransportType.trolley,
+        child: Text(lang.trolleybus),
+      ),
+      DropdownMenuItem(
+        value: TransportType.unknown,
+        child: Text(lang.all),
+      ),
+    ];
 
     return Scaffold(
       body: SafeArea(
@@ -68,19 +94,64 @@ class _TransportPageState extends ConsumerState<TransportPage> {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                TextField(
-                                  controller: _searchController,
-                                  decoration: const InputDecoration(
-                                    hintText: 'Search for bus number or bus ID',
-                                    border: OutlineInputBorder(),
-                                  ),
+                                Row(
+                                  children: [
+                                    Flexible(
+                                      flex: 2,
+                                      child: TextField(
+                                        controller: _searchController,
+                                        decoration: InputDecoration(
+                                          hintText:
+                                              lang.realtimeMapSearchPlaceholder,
+                                          border: const OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(14),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 14),
+                                    Flexible(
+                                      flex: 1,
+                                      child: DropdownButtonFormField(
+                                        value: dropdownvalue,
+                                        decoration: const InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(14),
+                                            ),
+                                          ),
+                                        ),
+                                        icon: const Icon(
+                                          Icons.keyboard_arrow_down,
+                                        ),
+                                        items: list,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            dropdownvalue =
+                                                value as TransportType;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 const SizedBox(height: 16),
                                 ElevatedButton(
                                   onPressed: () {
+                                    final searchText =
+                                        _searchController.text.trim();
+                                    final searchType = dropdownvalue;
+
+                                    final searchCriteria = SearchCriteria(
+                                      searchText: searchText,
+                                      transportType: searchType,
+                                    );
+
                                     ref
                                         .read(searchTransportProvider.notifier)
-                                        .update((_) => _searchController.text);
+                                        .update((_) => searchCriteria);
                                     Navigator.pop(context);
                                   },
                                   child: const Text('Search'),

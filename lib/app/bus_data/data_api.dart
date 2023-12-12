@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+import 'package:rigify/api_config.dart';
 import 'package:rigify/app/bus_data/route.dart';
 import 'package:rigify/app/bus_data/stop.dart';
 import 'package:rigify/app/bus_data/utils/utils.dart';
@@ -15,10 +16,9 @@ class FetchResponse {
   final bool success;
 }
 
-const String stopLink =
-    'https://openmobilitydata-data.s3-us-west-1.amazonaws.com/public/feeds/rigas-satiksme/333/20231023/original/stops.txt';
+const String stopLink = ApiConfig.stopLink;
 const List<String> routesLinks = [
-  'https://saraksti.rigassatiksme.lv/riga/routes.txt',
+  ApiConfig.RSRoutesLink,
   // 'http://www.marsruti.lv/rigasmikroautobusi/bbus/routes.txt', // currently not shown in app
 ];
 
