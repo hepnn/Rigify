@@ -15,6 +15,7 @@ import 'package:rigify/app/route_page/route_page.dart';
 import 'package:rigify/app/search_time_page/search_time_page.dart';
 import 'package:rigify/app/setting_page/settings_page.dart';
 import 'package:rigify/locale/locale_state.dart';
+import 'package:rigify/remote_config/firebase_remote_config_service.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -134,6 +135,8 @@ class _HomePageState extends ConsumerState<HomePage> {
     final lang = AppLocalizations.of(context)!;
 
     bool isOverlay = ref.watch(overlayOpenProvider);
+    final mapEnabled =
+        ref.read(firebaseRemoteConfigServiceProvider).getMapEnabled();
 
     return WillPopScope(
       onWillPop: searching ? closeSearch : () => Future.value(true),
@@ -219,7 +222,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => const TransportPage(),
+                              builder: (_) => TransportPage(
+                                mapEnabled: mapEnabled,
+                              ),
                             ),
                           ),
                         );

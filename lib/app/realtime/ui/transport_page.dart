@@ -9,7 +9,12 @@ import 'package:rigify/app/realtime/widgets/transport_info_sheet.dart';
 import 'package:rigify/app/realtime/widgets/transport_type_filter.dart';
 
 class TransportPage extends ConsumerStatefulWidget {
-  const TransportPage({super.key});
+  final bool mapEnabled;
+
+  const TransportPage({
+    super.key,
+    required this.mapEnabled,
+  });
 
   @override
   ConsumerState<TransportPage> createState() => _TransportPageState();
@@ -52,9 +57,11 @@ class _TransportPageState extends ConsumerState<TransportPage> {
           children: [
             transportsAsync.when(
               data: (transports) {
-                return TransportMap(
-                  transports: transports,
-                );
+                return widget.mapEnabled
+                    ? TransportMap(
+                        transports: transports,
+                      )
+                    : Text('Map is disabled');
               },
               error: (error, stackTrace) => Container(
                 color: Colors.black.withOpacity(0.3),

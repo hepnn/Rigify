@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +23,7 @@ import 'package:rigify/app_entry.dart';
 import 'package:rigify/in_app_purchases/ad_removal_state.gen.dart';
 import 'package:rigify/in_app_purchases/in_app_purchase.dart';
 import 'package:rigify/locale/locale_providers.dart';
+import 'package:rigify/remote_config/firebase_remote_config_service.dart';
 import 'package:rigify/theme/config/theme.dart';
 import 'package:rigify/theme/theme_mode_state.dart';
 
@@ -92,9 +94,20 @@ void guardedMain() async {
 
   await fetchData(); // TODO: Refactor
 
+  final firebaseRemoteConfigService = FirebaseRemoteConfigService(
+    remoteConfig: FirebaseRemoteConfig.instance,
+  );
+
+  await firebaseRemoteConfigService.init();
+
   runApp(
-    const ProviderScope(
-      child: App(),
+    ProviderScope(
+      overrides: [
+        firebaseRemoteConfigServiceProvider.overrideWith(
+          (_) => firebaseRemoteConfigService,
+        )
+      ],
+      child: const App(),
     ),
   );
 }
