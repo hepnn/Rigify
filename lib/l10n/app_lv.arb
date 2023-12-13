@@ -42,5 +42,6 @@
     "routesPageErrorTitle": "Notika kļūda, mēģiniet restartēt",
     "realtimeMapSearchNoResults": "Transports netika atrasts",
     "realtimeMapSearchPlaceholder": "Ievadiet transporta numuru vai ID",
-    "realtimeMapSearchButton": "Meklēt"
+    "realtimeMapSearchButton": "Meklēt",
+    "map_disabled": "Kartei šobrīd notiek uzlabojumi, lūdzu mēģiniet vēlāk"
 }

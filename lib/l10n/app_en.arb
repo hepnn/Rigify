@@ -42,5 +42,6 @@
     "routesPageErrorTitle": "Error, try reloading",
     "realtimeMapSearchNoResults": "No results found",
     "realtimeMapSearchPlaceholder": "Enter transport number or ID",
-    "realtimeMapSearchButton": "Search"
+    "realtimeMapSearchButton": "Search",
+    "map_disabled": "Realtime map is currently under maintenance, please try again later"
 }

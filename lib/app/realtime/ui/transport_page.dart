@@ -61,7 +61,7 @@ class _TransportPageState extends ConsumerState<TransportPage> {
                     ? TransportMap(
                         transports: transports,
                       )
-                    : Text('Map is disabled');
+                    : const _MapDisabledState();
               },
               error: (error, stackTrace) => Container(
                 color: Colors.black.withOpacity(0.3),
@@ -233,6 +233,36 @@ class _IconContainer extends StatelessWidget {
               size: 22,
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _MapDisabledState extends StatelessWidget {
+  const _MapDisabledState({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final lang = AppLocalizations.of(context)!;
+    return Container(
+      color: Colors.black.withOpacity(0.3),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.map,
+              size: 64,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              lang.map_disabled,
+              style: Theme.of(context).textTheme.headline6,
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
     );
