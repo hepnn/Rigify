@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rigify/app/realtime/model/transport_model.dart';
 import 'package:rigify/app/realtime/provider/search_provider.dart';
@@ -6,7 +7,6 @@ import 'package:rigify/app/realtime/provider/transport_service.dart';
 import 'package:rigify/app/realtime/ui/transport_map.dart';
 import 'package:rigify/app/realtime/widgets/transport_info_sheet.dart';
 import 'package:rigify/app/realtime/widgets/transport_type_filter.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TransportPage extends ConsumerStatefulWidget {
   const TransportPage({super.key});
@@ -186,20 +186,6 @@ class _TransportPageState extends ConsumerState<TransportPage> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
-  }
-}
-
-class _SettingList extends StatelessWidget {
-  const _SettingList();
-
-  @override
-  Widget build(BuildContext context) {
-    return _IconContainer(
-      icon: Icons.settings_rounded,
-      iconColor: Colors.grey.shade500,
-      color: Colors.white,
-      onTap: () {},
-    );
   }
 }
 

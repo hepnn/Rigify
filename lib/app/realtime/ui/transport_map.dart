@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
+import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:rigify/api_config.dart';
@@ -10,7 +12,6 @@ import 'package:rigify/app/realtime/provider/polyline_provider.dart';
 import 'package:rigify/app/realtime/provider/search_provider.dart';
 import 'package:rigify/app/realtime/widgets/user_location_marker.dart';
 import 'package:rigify/theme/theme_mode_state.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final selectedTransportProvider =
     StateProvider.autoDispose<Transport?>((ref) => null);
@@ -26,6 +27,7 @@ class TransportMap extends ConsumerStatefulWidget {
 
 class _TransportMapState extends ConsumerState<TransportMap> {
   late final MapController _mapController;
+
   Marker? _userLocationMarker;
   double? _rotation;
   List<LatLng> polylineCoordinates = [];
@@ -119,6 +121,7 @@ class _TransportMapState extends ConsumerState<TransportMap> {
           urlTemplate: urlTemplate,
           subdomains: const ['a', 'b', 'c'],
           backgroundColor: Colors.transparent,
+          tileProvider: FMTC.instance('mapStore').getTileProvider(),
         ),
         PolylineLayer(
           polylines: [

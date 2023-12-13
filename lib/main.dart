@@ -5,7 +5,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -22,12 +24,13 @@ import 'package:rigify/in_app_purchases/in_app_purchase.dart';
 import 'package:rigify/locale/locale_providers.dart';
 import 'package:rigify/theme/config/theme.dart';
 import 'package:rigify/theme/theme_mode_state.dart';
-import 'package:flutter/services.dart';
 
 import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await FlutterMapTileCaching.initialise();
+  await FMTC.instance('mapStore').manage.createAsync();
 
   final certString = await rootBundle
       .loadString('assets/certificates/saraksti.rigassatiksme.lv.crt');

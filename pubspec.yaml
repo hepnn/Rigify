@@ -45,7 +45,7 @@ dependencies:
   hooks_riverpod: ^2.4.5
   logging: ^1.2.0
   in_app_purchase: ^3.1.11
-  flutter_map: ^3.1.0
+  flutter_map: ^4.0.0
   firebase_core: ^2.20.0
   firebase_crashlytics: ^3.4.2
   firebase_core_platform_interface: ^5.0.0
@@ -57,6 +57,7 @@ dependencies:
   simplify: ^1.0.2
   fixnum: ^1.1.0
   dropdown_button2: ^2.3.9
+  flutter_map_tile_caching: ^8.0.1
 
 dev_dependencies:
   flutter_test:
