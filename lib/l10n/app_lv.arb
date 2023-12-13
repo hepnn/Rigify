@@ -38,5 +38,6 @@
     "nearestStopsTitle": "Tuvākās pieturas",
     "favoriteDialogAdd": "Pievienot favorītiem",
     "favoriteDialogRemove": "Noņemt no favorītiem",
-    "routesPageErrorTitle": "Notika kļūda, mēģiniet restartēt"
+    "routesPageErrorTitle": "Notika kļūda, mēģiniet restartēt",
+    "rate_my_app": "Novērtē manu lietotni"
 }

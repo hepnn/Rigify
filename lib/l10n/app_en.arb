@@ -38,5 +38,6 @@
     "nearestStopsTitle": "Nearest Stops",
     "favoriteDialogAdd": "Add to favourites",
     "favoriteDialogRemove": "Remove from favourites",
-    "routesPageErrorTitle": "Error, try reloading"
+    "routesPageErrorTitle": "Error, try reloading",
+    "rate_my_app": "Rate My App"
 }
