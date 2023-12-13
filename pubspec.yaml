@@ -60,6 +60,7 @@ dependencies:
   flutter_map_tile_caching: ^8.0.1
   firebase_remote_config: ^4.3.8
   firebase_analytics: ^10.7.4
+  in_app_review: ^2.0.8
 
 dev_dependencies:
   flutter_test:
