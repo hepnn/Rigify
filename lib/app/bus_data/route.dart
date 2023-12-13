@@ -24,6 +24,8 @@ class StopSchedule {
 
 @HiveType(typeId: 1)
 class RouteType {
+  RouteType();
+
   String? id;
   int? order;
   @HiveField(0)
@@ -51,6 +53,18 @@ class RouteType {
       ..type = routeType.type
       ..stops = routeType.stops
       ..times = routeType.times;
+  }
+
+  factory RouteType.empty() {
+    return RouteType()
+      ..id = ''
+      ..order = 0
+      ..transport = ''
+      ..number = '?'
+      ..name = '???? - ????'
+      ..type = ''
+      ..stops = []
+      ..times = [];
   }
 }
 

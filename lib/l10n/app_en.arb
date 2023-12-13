@@ -4,6 +4,7 @@
     "bus": "Bus",
     "tramway": "Tramway",
     "trolleybus": "Trolleybus",
+    "all": "All",
     "favRoutesTitle": "Favourites",
     "favRoutesEmpty": "No favourites",
     "favRoutesInfo": "Long press on route or press heart icon to add to favourites",
@@ -39,5 +40,9 @@
     "favoriteDialogAdd": "Add to favourites",
     "favoriteDialogRemove": "Remove from favourites",
     "routesPageErrorTitle": "Error, try reloading",
+    "realtimeMapSearchNoResults": "No results found",
+    "realtimeMapSearchPlaceholder": "Enter transport number or ID",
+    "realtimeMapSearchButton": "Search",
+    "map_disabled": "Realtime map is currently under maintenance, please try again later",
     "rate_my_app": "Rate My App"
 }

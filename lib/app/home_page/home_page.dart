@@ -9,11 +9,13 @@ import 'package:rigify/app/bus_data/stop.dart';
 import 'package:rigify/app/bus_data/utils/utils.dart';
 import 'package:rigify/app/home_page/widgets/search_overlay.dart';
 import 'package:rigify/app/home_page/widgets/transport_card.dart';
+import 'package:rigify/app/realtime/ui/transport_page.dart';
 import 'package:rigify/app/recents_page/recents_page.dart';
 import 'package:rigify/app/route_page/route_page.dart';
 import 'package:rigify/app/search_time_page/search_time_page.dart';
 import 'package:rigify/app/setting_page/settings_page.dart';
 import 'package:rigify/locale/locale_state.dart';
+import 'package:rigify/remote_config/firebase_remote_config_service.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -133,6 +135,8 @@ class _HomePageState extends ConsumerState<HomePage> {
     final lang = AppLocalizations.of(context)!;
 
     bool isOverlay = ref.watch(overlayOpenProvider);
+    final mapEnabled =
+        ref.read(firebaseRemoteConfigServiceProvider).getMapEnabled();
 
     return WillPopScope(
       onWillPop: searching ? closeSearch : () => Future.value(true),
@@ -211,15 +215,29 @@ class _HomePageState extends ConsumerState<HomePage> {
                       crossAxisSpacing: 16.0,
                       childAspectRatio: 1,
                     ),
-                    itemCount: transportNames.length,
+                    itemCount: transportNames.length + 1,
                     itemBuilder: (context, i) {
+                      if (i == transportNames.length) {
+                        return MapGridItem(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => TransportPage(
+                                mapEnabled: mapEnabled,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+
                       final String transport = transportNames.keys.toList()[i];
                       final String transportName = lang.transports;
                       List transports = transportName.split(':');
+
                       return GridItem(
                         title: transports[i],
                         iconColor: colors[transport],
-                        icon: Icons.directions_bus,
+                        icon: icons[transport],
                         onTap: () {
                           Navigator.push(
                             context,

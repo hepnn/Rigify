@@ -3,9 +3,12 @@ import 'dart:ui';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -20,14 +23,16 @@ import 'package:rigify/app_entry.dart';
 import 'package:rigify/in_app_purchases/ad_removal_state.gen.dart';
 import 'package:rigify/in_app_purchases/in_app_purchase.dart';
 import 'package:rigify/locale/locale_providers.dart';
+import 'package:rigify/remote_config/firebase_remote_config_service.dart';
 import 'package:rigify/theme/config/theme.dart';
 import 'package:rigify/theme/theme_mode_state.dart';
-import 'package:flutter/services.dart';
 
 import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await FlutterMapTileCaching.initialise();
+  await FMTC.instance('mapStore').manage.createAsync();
 
   final certString = await rootBundle
       .loadString('assets/certificates/saraksti.rigassatiksme.lv.crt');
@@ -89,9 +94,20 @@ void guardedMain() async {
 
   await fetchData(); // TODO: Refactor
 
+  final firebaseRemoteConfigService = FirebaseRemoteConfigService(
+    remoteConfig: FirebaseRemoteConfig.instance,
+  );
+
+  await firebaseRemoteConfigService.init();
+
   runApp(
-    const ProviderScope(
-      child: App(),
+    ProviderScope(
+      overrides: [
+        firebaseRemoteConfigServiceProvider.overrideWith(
+          (_) => firebaseRemoteConfigService,
+        )
+      ],
+      child: const App(),
     ),
   );
 }

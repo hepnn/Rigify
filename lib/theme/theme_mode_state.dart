@@ -27,6 +27,16 @@ class ThemeModeState extends ChangeNotifier {
 
   ThemeMode? themeMode;
 
+  bool get isDarkMode {
+    if (themeMode == ThemeMode.system) {
+      var brightness = MediaQueryData.fromView(WidgetsBinding.instance.window)
+          .platformBrightness;
+      return brightness == Brightness.dark;
+    } else {
+      return themeMode == ThemeMode.dark;
+    }
+  }
+
   void setThemeMode(ThemeMode mode) {
     themeMode = mode;
     Hive.box('prefs').put('themeMode', themeMode.toString());
