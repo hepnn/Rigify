@@ -25,28 +25,26 @@ class _AppEntryState extends State<AppEntry> {
     return Scaffold(
       extendBody: true,
       body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: SizedBox(
+      bottomNavigationBar: NavigationBar(
         height: 66,
-        child: NavigationBar(
-          destinations: const [
-            NavigationDestination(
-              icon: FaIcon(FontAwesomeIcons.heart),
-              label: '',
-            ),
-            NavigationDestination(
-              icon: FaIcon(FontAwesomeIcons.home),
-              label: '',
-            ),
-            NavigationDestination(
-              icon: FaIcon(FontAwesomeIcons.newspaper),
-              label: '',
-            ),
-          ],
-          selectedIndex: _selectedIndex,
-          onDestinationSelected: (index) => setState(() {
-            _selectedIndex = index;
-          }),
-        ),
+        destinations: const [
+          NavigationDestination(
+            icon: FaIcon(FontAwesomeIcons.heart),
+            label: '',
+          ),
+          NavigationDestination(
+            icon: FaIcon(FontAwesomeIcons.home),
+            label: '',
+          ),
+          NavigationDestination(
+            icon: FaIcon(FontAwesomeIcons.newspaper),
+            label: '',
+          ),
+        ],
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: (index) => setState(() {
+          _selectedIndex = index;
+        }),
       ),
     );
   }
