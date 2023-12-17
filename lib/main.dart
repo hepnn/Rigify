@@ -103,9 +103,9 @@ void guardedMain() async {
 
   runApp(
     DevicePreview(
-      tools: [
+      tools: const [
         ...DevicePreview.defaultTools,
-        const DevicePreviewScreenshot(),
+        DevicePreviewScreenshot(),
       ],
       builder: (context) => ProviderScope(
         overrides: [
