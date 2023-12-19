@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:device_preview_screenshot/device_preview_screenshot.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -101,13 +102,19 @@ void guardedMain() async {
   await firebaseRemoteConfigService.init();
 
   runApp(
-    ProviderScope(
-      overrides: [
-        firebaseRemoteConfigServiceProvider.overrideWith(
-          (_) => firebaseRemoteConfigService,
-        )
+    DevicePreview(
+      tools: const [
+        ...DevicePreview.defaultTools,
+        DevicePreviewScreenshot(),
       ],
-      child: const App(),
+      builder: (context) => ProviderScope(
+        overrides: [
+          firebaseRemoteConfigServiceProvider.overrideWith(
+            (_) => firebaseRemoteConfigService,
+          )
+        ],
+        child: const App(),
+      ),
     ),
   );
 }

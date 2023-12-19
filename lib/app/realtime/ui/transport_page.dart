@@ -52,31 +52,31 @@ class _TransportPageState extends ConsumerState<TransportPage> {
     ];
 
     return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            transportsAsync.when(
-              data: (transports) {
-                return widget.mapEnabled
-                    ? TransportMap(
-                        transports: transports,
-                      )
-                    : const _MapDisabledState();
-              },
-              error: (error, stackTrace) => Container(
-                color: Colors.black.withOpacity(0.3),
-                child: Center(
-                  child: Text(
-                    error.toString(),
-                  ),
+      body: Stack(
+        children: [
+          transportsAsync.when(
+            data: (transports) {
+              return widget.mapEnabled
+                  ? TransportMap(
+                      transports: transports,
+                    )
+                  : const _MapDisabledState();
+            },
+            error: (error, stackTrace) => Container(
+              color: Colors.black.withOpacity(0.3),
+              child: Center(
+                child: Text(
+                  error.toString(),
                 ),
               ),
-              loading: () => const Center(
-                child: CircularProgressIndicator(),
-              ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            loading: () => const Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -122,6 +122,7 @@ class _TransportPageState extends ConsumerState<TransportPage> {
                                     Flexible(
                                       flex: 1,
                                       child: DropdownButtonFormField(
+                                        isExpanded: true,
                                         value: dropdownvalue,
                                         decoration: const InputDecoration(
                                           border: OutlineInputBorder(
@@ -174,17 +175,17 @@ class _TransportPageState extends ConsumerState<TransportPage> {
                 ],
               ),
             ),
-            if (selectedTransport != null)
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: TransportInfoSheet(
-                  transport: selectedTransport,
-                ),
+          ),
+          if (selectedTransport != null)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: TransportInfoSheet(
+                transport: selectedTransport,
               ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }

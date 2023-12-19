@@ -17,16 +17,16 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -49,20 +49,21 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyARHUSrfjHx8l1YlqHwQU9j-eYtYCUUhTo',
+    appId: '1:929900450108:web:60cf8e7b520e0a1e1d8e39',
+    messagingSenderId: '929900450108',
+    projectId: 'rigify',
+    authDomain: 'rigify.firebaseapp.com',
+    storageBucket: 'rigify.appspot.com',
+    measurementId: 'G-PHNZXCNY0T',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyB5jCiSCT_ErPPe4KWvl97Ru_kKf_VcVBY',
     appId: '1:929900450108:android:304e9c9f89f323b71d8e39',
     messagingSenderId: '929900450108',
     projectId: 'rigify',
     storageBucket: 'rigify.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBGjb90blIdmMQWbiaxhCfh6RR4jKGXcws',
-    appId: '1:929900450108:ios:9e692168517d768a1d8e39',
-    messagingSenderId: '929900450108',
-    projectId: 'rigify',
-    storageBucket: 'rigify.appspot.com',
-    iosBundleId: 'com.ouji.rigify',
   );
 }
