@@ -194,7 +194,7 @@ class _TimePageState extends State<TimePage>
               itemBuilder: (context, index) {
                 var hour = _times[weekday]!.keys.elementAt(index);
                 var isEvenRow = index % 2 == 0;
-                final hourPadding = hour % 24 > 9 ? 30.0 : 40.0;
+                final hourPadding = hour % 24 > 9 ? 20.0 : 30.0;
 
                 return Container(
                   key: getKey(weekday, hour),
@@ -223,7 +223,7 @@ class _TimePageState extends State<TimePage>
                           shrinkWrap: true,
                           maxCrossAxisExtent: 35.0,
                           padding: const EdgeInsets.only(right: 10.0),
-                          mainAxisSpacing: 20.0,
+                          mainAxisSpacing: 20,
                           crossAxisSpacing: 20,
                           children: _times[weekday]![hour]!.map((minute) {
                             i++;
@@ -244,36 +244,42 @@ class _TimePageState extends State<TimePage>
                                           TripPage(_route, _stop, weekday, i),
                                     ),
                                   ))(i),
-                              child: Center(
-                                child: Transform.scale(
-                                  scale: 1.2,
-                                  child: SizedBox(
-                                    child: Opacity(
-                                      opacity: isPastTime ? 0.5 : 1,
-                                      child: Card(
-                                        color: isPastTime
-                                            ? Theme.of(context)
-                                                .drawerTheme
-                                                .backgroundColor
-                                            : null,
-                                        shape: RoundedRectangleBorder(
-                                          side: isClosestFutureTime
-                                              ? const BorderSide(
-                                                  width: 1,
-                                                  color: Colors.amber,
-                                                )
-                                              : BorderSide.none,
-                                          borderRadius: const BorderRadius.all(
-                                            Radius.circular(4.0),
+                              child: SizedBox(
+                                height: 60,
+                                child: Center(
+                                  child: Transform.scale(
+                                    scale: 1.2,
+                                    child: SizedBox(
+                                      child: Opacity(
+                                        opacity: isPastTime ? 0.5 : 1,
+                                        child: Card(
+                                          color: isPastTime
+                                              ? Theme.of(context)
+                                                  .drawerTheme
+                                                  .backgroundColor
+                                              : null,
+                                          shape: RoundedRectangleBorder(
+                                            side: isClosestFutureTime
+                                                ? const BorderSide(
+                                                    width: 1,
+                                                    color: Colors.amber,
+                                                  )
+                                                : BorderSide.none,
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                              Radius.circular(4.0),
+                                            ),
                                           ),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(2),
-                                          child: Center(
-                                            child: Text(
-                                              minute.toString().padLeft(2, '0'),
-                                              style: const TextStyle(
-                                                fontSize: 16,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(2),
+                                            child: Center(
+                                              child: Text(
+                                                minute
+                                                    .toString()
+                                                    .padLeft(2, '0'),
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                ),
                                               ),
                                             ),
                                           ),

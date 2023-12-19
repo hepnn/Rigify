@@ -76,44 +76,47 @@ class _TransportMapState extends ConsumerState<TransportMap> {
         maxZoom: 18,
       ),
       nonRotatedChildren: [
-        Column(
-          children: [
-            const Spacer(),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  FloatingActionButton(
-                    onPressed: () async {
-                      LatLng userLocation = await ref
-                          .read(locationRepositoryProvider)
-                          .getCurrentLocation();
-                      setState(() {
-                        _userLocationMarker = Marker(
-                          point: userLocation,
-                          builder: (ctx) => LocationIndicator(
-                            location: userLocation,
-                          ),
-                          width: 40,
-                          height: 40,
-                          anchorPos: AnchorPos.align(AnchorAlign.center),
-                        );
-                        _mapController.move(
-                          userLocation,
-                          15.0,
-                        );
-                      });
-                    },
-                    heroTag: null,
-                    backgroundColor: const Color(0xff36323a),
-                    foregroundColor: Colors.blue,
-                    child: const Icon(Icons.my_location),
-                  ),
-                ],
+        Padding(
+          padding: const EdgeInsets.all(4),
+          child: Column(
+            children: [
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    FloatingActionButton(
+                      onPressed: () async {
+                        LatLng userLocation = await ref
+                            .read(locationRepositoryProvider)
+                            .getCurrentLocation();
+                        setState(() {
+                          _userLocationMarker = Marker(
+                            point: userLocation,
+                            builder: (ctx) => LocationIndicator(
+                              location: userLocation,
+                            ),
+                            width: 40,
+                            height: 40,
+                            anchorPos: AnchorPos.align(AnchorAlign.center),
+                          );
+                          _mapController.move(
+                            userLocation,
+                            15.0,
+                          );
+                        });
+                      },
+                      heroTag: null,
+                      backgroundColor: const Color(0xff36323a),
+                      foregroundColor: Colors.blue,
+                      child: const Icon(Icons.my_location),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
       children: [
