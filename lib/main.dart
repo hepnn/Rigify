@@ -103,6 +103,7 @@ void guardedMain() async {
 
   runApp(
     DevicePreview(
+      enabled: !kReleaseMode,
       tools: const [
         ...DevicePreview.defaultTools,
         DevicePreviewScreenshot(),
