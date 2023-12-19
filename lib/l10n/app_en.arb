@@ -43,5 +43,6 @@
     "realtimeMapSearchNoResults": "No results found",
     "realtimeMapSearchPlaceholder": "Enter transport number or ID",
     "realtimeMapSearchButton": "Search",
-    "map_disabled": "Realtime map is currently under maintenance, please try again later"
+    "map_disabled": "Realtime map is currently under maintenance, please try again later",
+    "rate_my_app": "Rate My App"
 }

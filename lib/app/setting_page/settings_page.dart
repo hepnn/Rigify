@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:rigify/app/setting_page/widgets/language_picker.dart';
 import 'package:rigify/app/setting_page/widgets/theme_card.dart';
 import 'package:rigify/main.dart';
@@ -17,6 +18,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final lang = AppLocalizations.of(context)!;
+    final InAppReview inAppReview = InAppReview.instance;
+
+    Future<void> _openStoreListing() => inAppReview.openStoreListing();
 
     return Scaffold(
       appBar: AppBar(
@@ -39,7 +43,47 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const ThemeCard(),
             const _ContactDevRow(),
             const _RemoveAdsRow(),
+            _RateMyApp(
+              onSelected: _openStoreListing,
+            ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _RateMyApp extends StatelessWidget {
+  final VoidCallback onSelected;
+
+  const _RateMyApp({
+    required this.onSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final lang = AppLocalizations.of(context)!;
+
+    return GestureDetector(
+      onTap: onSelected,
+      child: Card(
+        elevation: 8,
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Row(
+                children: [
+                  Text(lang.rate_my_app),
+                  const Spacer(),
+                  const Icon(
+                    Icons.exit_to_app,
+                  )
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );
