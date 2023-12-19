@@ -43,6 +43,7 @@
     "realtimeMapSearchNoResults": "Transports netika atrasts",
     "realtimeMapSearchPlaceholder": "Ievadiet transporta numuru vai ID",
     "realtimeMapSearchButton": "Meklēt",
+    "realtime_map": "Reāllaika karte",
     "map_disabled": "Kartei šobrīd notiek uzlabojumi, lūdzu mēģiniet vēlāk",
     "rate_my_app": "Novērtē manu lietotni"
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rigify/theme/theme_mode_state.dart';
 
@@ -63,6 +64,7 @@ class MapGridItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.read(themeProvider);
+    final lang = AppLocalizations.of(context)!;
     final isDark = theme.isDarkMode;
     final mapAsset = isDark ? 'map.png' : 'map_light.png';
     final mapOpacity = isDark ? 0.3 : 0.0;
@@ -86,10 +88,10 @@ class MapGridItem extends ConsumerWidget {
               ),
             ),
           ),
-          child: const Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
+              const Padding(
                 padding: EdgeInsets.all(20.0),
                 child: Icon(
                   Icons.map,
@@ -98,8 +100,8 @@ class MapGridItem extends ConsumerWidget {
                 ),
               ),
               Text(
-                'Realtime Map',
-                style: TextStyle(fontWeight: FontWeight.w500),
+                lang.realtime_map,
+                style: const TextStyle(fontWeight: FontWeight.w500),
               )
             ],
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rigify/app/bus_data/route.dart';
 import 'package:rigify/app/realtime/model/transport_model.dart';
@@ -109,6 +110,7 @@ class _TransportInfoSheetState extends ConsumerState<TransportInfoSheet> {
               children: [
                 Text(
                   route.name ?? ' ',
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -116,11 +118,28 @@ class _TransportInfoSheetState extends ConsumerState<TransportInfoSheet> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  widget.transport.vehicleId,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.white70,
+                GestureDetector(
+                  onTap: () {
+                    Clipboard.setData(
+                      ClipboardData(text: widget.transport.vehicleId),
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      Text(
+                        widget.transport.vehicleId,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.white70,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      const Icon(
+                        Icons.copy,
+                        size: 12,
+                        color: Colors.white,
+                      ),
+                    ],
                   ),
                 ),
               ],

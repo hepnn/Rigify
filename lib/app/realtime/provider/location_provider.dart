@@ -31,6 +31,29 @@ class LocationRepository {
 
     return LatLng(position.latitude, position.longitude);
   }
+
+  Future<LatLng?> getLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return null;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      return null;
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return null;
+    }
+
+    final position = await Geolocator.getCurrentPosition();
+
+    return LatLng(position.latitude, position.longitude);
+  }
 }
 
 @riverpod
