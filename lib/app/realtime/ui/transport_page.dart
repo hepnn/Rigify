@@ -78,100 +78,103 @@ class _TransportPageState extends ConsumerState<TransportPage> {
             child: Padding(
               padding: const EdgeInsets.only(left: 16, right: 16),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  const TransportTypeFilter(),
-                  const Spacer(),
-                  _IconContainer(
-                    icon: Icons.search_rounded,
-                    iconColor: Colors.grey.shade500,
-                    color: Colors.white,
-                    onTap: () {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (context) {
-                          return Padding(
-                            padding: EdgeInsets.only(
-                              top: 16,
-                              left: 16,
-                              right: 16,
-                              bottom: MediaQuery.of(context).viewInsets.bottom,
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Row(
+                  Column(
+                    children: [
+                      IconContainer(
+                        icon: Icons.search_rounded,
+                        iconColor: Colors.grey.shade500,
+                        onTap: () {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (context) {
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  top: 16,
+                                  left: 16,
+                                  right: 16,
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom,
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Flexible(
-                                      flex: 2,
-                                      child: TextField(
-                                        controller: _searchController,
-                                        decoration: InputDecoration(
-                                          hintText:
-                                              lang.realtimeMapSearchPlaceholder,
-                                          border: const OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(14),
+                                    Row(
+                                      children: [
+                                        Flexible(
+                                          flex: 2,
+                                          child: TextField(
+                                            controller: _searchController,
+                                            decoration: InputDecoration(
+                                              hintText: lang
+                                                  .realtimeMapSearchPlaceholder,
+                                              border: const OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(14),
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
+                                        const SizedBox(width: 14),
+                                        Flexible(
+                                          flex: 1,
+                                          child: DropdownButtonFormField(
+                                            isExpanded: true,
+                                            value: dropdownvalue,
+                                            decoration: const InputDecoration(
+                                              border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(14),
+                                                ),
+                                              ),
+                                            ),
+                                            icon: const Icon(
+                                              Icons.keyboard_arrow_down,
+                                            ),
+                                            items: list,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                dropdownvalue =
+                                                    value as TransportType;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    const SizedBox(width: 14),
-                                    Flexible(
-                                      flex: 1,
-                                      child: DropdownButtonFormField(
-                                        isExpanded: true,
-                                        value: dropdownvalue,
-                                        decoration: const InputDecoration(
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(14),
-                                            ),
-                                          ),
-                                        ),
-                                        icon: const Icon(
-                                          Icons.keyboard_arrow_down,
-                                        ),
-                                        items: list,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            dropdownvalue =
-                                                value as TransportType;
-                                          });
-                                        },
-                                      ),
+                                    const SizedBox(height: 16),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        final searchText =
+                                            _searchController.text.trim();
+                                        final searchType = dropdownvalue;
+
+                                        final searchCriteria = SearchCriteria(
+                                          searchText: searchText,
+                                          transportType: searchType,
+                                        );
+
+                                        ref
+                                            .read(searchTransportProvider
+                                                .notifier)
+                                            .update((_) => searchCriteria);
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('Search'),
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 16),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    final searchText =
-                                        _searchController.text.trim();
-                                    final searchType = dropdownvalue;
-
-                                    final searchCriteria = SearchCriteria(
-                                      searchText: searchText,
-                                      transportType: searchType,
-                                    );
-
-                                    ref
-                                        .read(searchTransportProvider.notifier)
-                                        .update((_) => searchCriteria);
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text('Search'),
-                                ),
-                              ],
-                            ),
+                              );
+                            },
                           );
                         },
-                      );
-                    },
+                      ),
+                    ],
                   ),
-                  // const _SettingList(),
+                  const TransportTypeFilter(),
                 ],
               ),
             ),
@@ -197,42 +200,36 @@ class _TransportPageState extends ConsumerState<TransportPage> {
   }
 }
 
-class _IconContainer extends StatelessWidget {
+class IconContainer extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
-  final Color color;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
-  const _IconContainer({
+  const IconContainer({
+    super.key,
     required this.icon,
     required this.iconColor,
-    required this.color,
-    required this.onTap,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Card(
-        elevation: 8,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-          decoration: BoxDecoration(
-            color: null,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Icon(
-              icon,
-              color: iconColor,
-              size: 22,
-            ),
+    final borderRadius = BorderRadius.circular(10);
+
+    return Card(
+      elevation: 8,
+      shape: RoundedRectangleBorder(
+        borderRadius: borderRadius,
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: borderRadius,
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Icon(
+            icon,
+            color: iconColor,
+            size: 22,
           ),
         ),
       ),

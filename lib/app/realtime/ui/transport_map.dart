@@ -6,10 +6,12 @@ import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:rigify/api_config.dart';
+import 'package:rigify/app/bus_data/stop.dart';
 import 'package:rigify/app/realtime/model/transport_model.dart';
 import 'package:rigify/app/realtime/provider/location_provider.dart';
 import 'package:rigify/app/realtime/provider/polyline_provider.dart';
 import 'package:rigify/app/realtime/provider/search_provider.dart';
+import 'package:rigify/app/realtime/provider/stops_provider.dart';
 import 'package:rigify/app/realtime/widgets/user_location_marker.dart';
 import 'package:rigify/theme/theme_mode_state.dart';
 
@@ -27,6 +29,7 @@ class TransportMap extends ConsumerStatefulWidget {
 
 class _TransportMapState extends ConsumerState<TransportMap> {
   late final MapController _mapController;
+  var zoomLevel = 13.0;
 
   Marker? _userLocationMarker;
   double? _rotation;
@@ -41,6 +44,10 @@ class _TransportMapState extends ConsumerState<TransportMap> {
         _rotation = event.currentRotation;
         setState(() {});
       }
+      if (event is MapEventMove) {
+        zoomLevel = _mapController.zoom;
+        setState(() {});
+      }
     });
   }
 
@@ -51,6 +58,7 @@ class _TransportMapState extends ConsumerState<TransportMap> {
         isDarkMode ? ApiConfig.mapTemplateDark : ApiConfig.mapTemplateLight;
     final selectedTransport = ref.read(selectedTransportProvider);
     final polylineColor = selectedTransport?.type.color.withOpacity(0.4);
+    final showStops = ref.watch(stopVisibilityProvider);
 
     ref.listen<Transport?>(selectedTransportProvider, (_, selectedTransport) {
       if (selectedTransport == null) {
@@ -135,6 +143,10 @@ class _TransportMapState extends ConsumerState<TransportMap> {
             ),
           ],
         ),
+        if (showStops && zoomLevel >= 14)
+          MarkerLayer(
+            markers: _buildStopMarkers(),
+          ),
         MarkerClusterLayerWidget(
           options: MarkerClusterLayerOptions(
             markers: _buildMarkers(
@@ -190,6 +202,40 @@ class _TransportMapState extends ConsumerState<TransportMap> {
       markers.add(_userLocationMarker!);
     }
     return markers;
+  }
+
+  List<Marker> _buildStopMarkers() {
+    final markers = stops.values.map(
+      (stop) => Marker(
+        width: 15.0,
+        height: 15.0,
+        point: LatLng(stop.latitude ?? 0.0, stop.longitude ?? 0.0),
+        builder: (ctx) => Container(
+          child: GestureDetector(
+            onTap: () {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(stop.name!),
+                ),
+              );
+            },
+            child: // circle
+                Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.blueGrey.withOpacity(0.5),
+                border: Border.all(
+                  color: Colors.white,
+                  width: 1.0,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    return markers.toList();
   }
 
   void _loadAndSetPolylines(Transport transport) async {

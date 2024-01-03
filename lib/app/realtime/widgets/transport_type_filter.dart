@@ -1,17 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rigify/app/realtime/model/transport_model.dart';
+import 'package:rigify/app/realtime/provider/stops_provider.dart';
 import 'package:rigify/app/realtime/provider/transport_service.dart';
+import 'package:rigify/app/realtime/ui/transport_page.dart';
 
 final isInitialSetupDoneProvider = StateProvider<bool>((ref) => false);
 
-class TransportTypeFilter extends ConsumerWidget {
+class TransportTypeFilter extends ConsumerStatefulWidget {
   const TransportTypeFilter({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TransportTypeFilter> createState() =>
+      _TransportTypeFilterState();
+}
+
+class _TransportTypeFilterState extends ConsumerState<TransportTypeFilter> {
+  var isListVisible = false;
+
+  @override
+  Widget build(BuildContext context) {
     final isInitialSetupDone = ref.watch(isInitialSetupDoneProvider);
     final selectedTypes = ref.watch(selectedTransportTypesProvider);
+    final bool isSelected = ref.watch(stopVisibilityProvider);
 
     if (!isInitialSetupDone && selectedTypes.isEmpty) {
       Future.microtask(() {
@@ -46,22 +58,67 @@ class TransportTypeFilter extends ConsumerWidget {
       );
     }).toList();
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: typeWidgets,
+    return TapRegion(
+      onTapOutside: (tap) {
+        if (isListVisible) {
+          setState(() {
+            isListVisible = false;
+          });
+        }
+      },
+      child: Column(
+        children: [
+          InkWell(
+            onTap: () {
+              setState(() {
+                isListVisible = !isListVisible;
+              });
+            },
+            child: IconContainer(
+              icon: isListVisible ? Icons.close : Icons.filter_list,
+              iconColor: Colors.white,
+            ),
+          ),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 600),
+            height: isListVisible ? null : 0,
+            child: Visibility(
+              maintainState: true, // Maintain state to keep the list state
+              visible: isListVisible,
+              child: Column(
+                children: [
+                  _SelectTransportItem(
+                    onTap: () {
+                      ref.read(stopVisibilityProvider.notifier).state =
+                          !isSelected;
+                    },
+                    svgIcon: 'assets/app_assets/bus-stop.svg',
+                    iconColor: isSelected ? Colors.white : Colors.grey.shade400,
+                    color: Colors.blueGrey,
+                    isSelected: isSelected,
+                  ),
+                  ...typeWidgets,
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
 class _SelectTransportItem extends StatelessWidget {
-  final IconData icon;
+  final IconData? icon;
+  final String? svgIcon;
   final Color iconColor;
   final Color color;
   final VoidCallback onTap;
   final bool isSelected;
 
   const _SelectTransportItem({
-    required this.icon,
+    this.icon,
+    this.svgIcon,
     required this.onTap,
     required this.iconColor,
     required this.color,
@@ -86,11 +143,17 @@ class _SelectTransportItem extends StatelessWidget {
           ),
           child: Padding(
             padding: const EdgeInsets.all(12.0),
-            child: Icon(
-              icon,
-              color: iconColor,
-              size: 20,
-            ),
+            child: svgIcon == null
+                ? Icon(
+                    icon,
+                    color: iconColor,
+                    size: 20,
+                  )
+                : SvgPicture.asset(
+                    svgIcon!,
+                    height: 20,
+                    color: iconColor,
+                  ),
           ),
         ),
       ),
