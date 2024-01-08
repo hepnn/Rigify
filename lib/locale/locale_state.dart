@@ -143,14 +143,14 @@ class LocaleStateNotifier extends StateNotifier<LocaleState> {
         return false;
       }
 
-      print("State found in storage: " + _state.toJson().toString());
+      print("State found in storage: ${_state.toJson()}");
 
       // Set state
       state = _state;
 
       return true;
     } catch (e, s) {
-      print("Error" + e.toString());
+      print("Error$e");
       print(s);
       return false;
     }

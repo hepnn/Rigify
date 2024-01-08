@@ -92,7 +92,7 @@ class TwitterEmbed extends ConsumerWidget {
                                               ),
                                               const SizedBox(width: 5),
                                               Text(
-                                                '@${tweet.user.screenName} · ${dateparse[0] + " " + dateparse[1]}',
+                                                '@${tweet.user.screenName} · ${"${dateparse[0]} ${dateparse[1]}"}',
                                                 style: const TextStyle(
                                                     color: Colors.grey),
                                               )

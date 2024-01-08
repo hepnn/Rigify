@@ -17,7 +17,6 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:logging/logging.dart';
 import 'package:rigify/ads/ads_controller.dart';
-import 'package:rigify/app/bus_data/data_api.dart';
 import 'package:rigify/app/bus_data/route.dart';
 import 'package:rigify/app/bus_data/stop.dart';
 import 'package:rigify/app_entry.dart';

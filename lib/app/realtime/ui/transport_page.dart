@@ -238,7 +238,7 @@ class IconContainer extends StatelessWidget {
 }
 
 class _MapDisabledState extends StatelessWidget {
-  const _MapDisabledState({super.key});
+  const _MapDisabledState();
 
   @override
   Widget build(BuildContext context) {
@@ -257,7 +257,7 @@ class _MapDisabledState extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               lang.map_disabled,
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
           ],

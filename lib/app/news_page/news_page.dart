@@ -11,7 +11,7 @@ class NewsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    GlobalKey _menuKey = GlobalKey();
+    GlobalKey menuKey = GlobalKey();
 
     final adsControllerAvailable = (adsControllerProvider) != null;
 
@@ -30,7 +30,7 @@ class NewsPage extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
             child: IconButton(
-              key: _menuKey,
+              key: menuKey,
               icon: const FaIcon(FontAwesomeIcons.plus),
               onPressed: () {
                 showMenu(
@@ -66,9 +66,13 @@ class NewsPage extends ConsumerWidget {
                   if (value != null) {
                     // Handle the selected value here
                     if (value == 'twitter') {
-                      launch('https://twitter.com/Rigassatiksme_');
+                      launchUrl(Uri.parse(
+                        'https://twitter.com/Rigassatiksme_',
+                      ));
                     } else if (value == 'rigassatiksme') {
-                      launch('https://www.rigassatiksme.lv/lv/aktualitates/');
+                      launchUrl(Uri.parse(
+                        'https://www.rigassatiksme.lv/lv/aktualitates/',
+                      ));
                     }
                   }
                 });

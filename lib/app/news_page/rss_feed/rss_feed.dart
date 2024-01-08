@@ -48,8 +48,8 @@ class RSSFeed extends ConsumerWidget {
               return InkWell(
                 borderRadius: BorderRadius.circular(16),
                 onTap: () async {
-                  if (await canLaunch(feedItem.link)) {
-                    await launch(feedItem.link);
+                  if (await canLaunchUrl(Uri.parse(feedItem.link))) {
+                    await canLaunchUrl(Uri.parse(feedItem.link));
                   }
                 },
                 child: Card(

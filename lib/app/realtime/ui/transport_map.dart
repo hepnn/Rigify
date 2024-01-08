@@ -103,14 +103,16 @@ class _TransportMapState extends ConsumerState<TransportMap> {
                             .getLocation();
 
                         if (userLocation == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                AppLocalizations.of(context)!
-                                    .realtimeMapLocationError,
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  AppLocalizations.of(context)!
+                                      .realtimeMapLocationError,
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          }
                           return;
                         }
                         setState(() {
@@ -224,25 +226,23 @@ class _TransportMapState extends ConsumerState<TransportMap> {
         width: 15.0,
         height: 15.0,
         point: LatLng(stop.latitude ?? 0.0, stop.longitude ?? 0.0),
-        builder: (ctx) => Container(
-          child: GestureDetector(
-            onTap: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(stop.name!),
-                ),
-              );
-            },
-            child: // circle
-                Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.blueGrey.withOpacity(0.5),
-                border: Border.all(
-                  color: Colors.white,
-                  width: 1.0,
-                ),
+        builder: (ctx) => GestureDetector(
+          onTap: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(stop.name!),
+              ),
+            );
+          },
+          child: // circle
+              Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.blueGrey.withOpacity(0.5),
+              border: Border.all(
+                color: Colors.white,
+                width: 1.0,
               ),
             ),
           ),

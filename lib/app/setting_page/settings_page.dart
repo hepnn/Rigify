@@ -20,7 +20,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final lang = AppLocalizations.of(context)!;
     final InAppReview inAppReview = InAppReview.instance;
 
-    Future<void> _openStoreListing() => inAppReview.openStoreListing();
+    Future<void> openStoreListing() => inAppReview.openStoreListing();
 
     return Scaffold(
       appBar: AppBar(
@@ -44,7 +44,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const _ContactDevRow(),
             const _RemoveAdsRow(),
             _RateMyApp(
-              onSelected: _openStoreListing,
+              onSelected: openStoreListing,
             ),
           ],
         ),

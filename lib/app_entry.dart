@@ -33,7 +33,7 @@ class _AppEntryState extends State<AppEntry> {
             label: '',
           ),
           NavigationDestination(
-            icon: FaIcon(FontAwesomeIcons.home),
+            icon: FaIcon(FontAwesomeIcons.house),
             label: '',
           ),
           NavigationDestination(

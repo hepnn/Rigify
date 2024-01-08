@@ -8,7 +8,6 @@ ShapeBorder customShapeBorder = const RoundedRectangleBorder(
 );
 
 final ThemeData lightTheme = ThemeData.light().copyWith(
-  useMaterial3: true,
   scaffoldBackgroundColor: const Color(0xfff0eaea),
   bottomAppBarTheme: BottomAppBarTheme(color: Colors.white.withOpacity(0.8)),
   bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -58,11 +57,10 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
 );
 
 final ThemeData darkTheme = ThemeData.dark().copyWith(
-  useMaterial3: true,
   bottomAppBarTheme: const BottomAppBarTheme(color: Color(0xff414141)),
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     backgroundColor: Colors.grey[900],
-    selectedItemColor: Color.fromARGB(255, 240, 234, 234),
+    selectedItemColor: const Color.fromARGB(255, 240, 234, 234),
     unselectedItemColor: Colors.grey,
   ),
   scaffoldBackgroundColor: const Color(0xff312f31),
