@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rigify/app/bus_data/data_api.dart';
 import 'package:rigify/app/bus_data/route.dart';
 import 'package:rigify/app/bus_data/stop.dart';
 import 'package:rigify/app/bus_data/utils/utils.dart';
@@ -30,6 +31,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   void initState() {
     super.initState();
+    fetchData();
     var widgetsBinding = WidgetsBinding.instance;
     widgetsBinding.addPostFrameCallback((_) async {
       // Locale Startup Actions
@@ -157,7 +159,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                     });
                   },
                   decoration: const InputDecoration(
-                      hintText: 'Search...', border: InputBorder.none),
+                    hintText: 'Search...',
+                    border: InputBorder.none,
+                  ),
                 )
               : Padding(
                   padding: const EdgeInsets.only(left: 16.0, right: 8.0),

@@ -93,7 +93,7 @@ void guardedMain() async {
   await Hive.openBox<RouteType>('recentRoutes');
   await Hive.openBox('prefs');
 
-  await fetchData(); // TODO: Refactor
+  // await fetchData(); // TODO: Refactor
 
   final firebaseRemoteConfigService = FirebaseRemoteConfigService(
     remoteConfig: FirebaseRemoteConfig.instance,

@@ -38,7 +38,7 @@ final transportsStreamProvider =
   final selectedTransportTypes = ref.watch(selectedTransportTypesProvider);
   final initialFetch = ref.read(transportRepositoryProvider).fetchTransports();
 
-  final periodicFetch = Stream.periodic(const Duration(seconds: 10), (_) {
+  final periodicFetch = Stream.periodic(const Duration(seconds: 5), (_) {
     return ref.read(transportRepositoryProvider).fetchTransports();
   }).asyncMap((event) async => await event);
 

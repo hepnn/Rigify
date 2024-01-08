@@ -44,7 +44,9 @@ class _TransportMapState extends ConsumerState<TransportMap> {
         _rotation = event.currentRotation;
         setState(() {});
       }
-      if (event is MapEventMove) {
+      if (event is MapEventMove ||
+          event is MapEventDoubleTapZoom ||
+          event is MapEventScrollWheelZoom) {
         zoomLevel = _mapController.zoom;
         setState(() {});
       }
