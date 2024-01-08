@@ -45,5 +45,6 @@
     "realtimeMapSearchButton": "Search",
     "realtime_map": "Realtime map",
     "map_disabled": "Realtime map is currently under maintenance, please try again later",
-    "rate_my_app": "Rate My App"
+    "rate_my_app": "Rate My App",
+    "realtimeMapLocationError": "Location permission denied, please enable location permission in settings"
 }

@@ -45,5 +45,6 @@
     "realtimeMapSearchButton": "Meklēt",
     "realtime_map": "Reāllaika karte",
     "map_disabled": "Kartei šobrīd notiek uzlabojumi, lūdzu mēģiniet vēlāk",
-    "rate_my_app": "Novērtē manu lietotni"
+    "rate_my_app": "Novērtē manu lietotni",
+    "realtimeMapLocationError": "Atrašanās vietas pieeja ir aizliegta, lūdzu iespējojiet to"
 }

@@ -43,7 +43,10 @@ class LocationRepository {
 
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
-      return null;
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return null;
+      }
     }
 
     if (permission == LocationPermission.deniedForever) {

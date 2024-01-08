@@ -98,9 +98,21 @@ class _TransportMapState extends ConsumerState<TransportMap> {
                   children: [
                     FloatingActionButton(
                       onPressed: () async {
-                        LatLng userLocation = await ref
+                        LatLng? userLocation = await ref
                             .read(locationRepositoryProvider)
-                            .getCurrentLocation();
+                            .getLocation();
+
+                        if (userLocation == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                AppLocalizations.of(context)!
+                                    .realtimeMapLocationError,
+                              ),
+                            ),
+                          );
+                          return;
+                        }
                         setState(() {
                           _userLocationMarker = Marker(
                             point: userLocation,
