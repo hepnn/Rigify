@@ -74,5 +74,7 @@ To enable fetching from Twitter, add:
 
 - More language support
 
+- Use Fimber, add Env vars, Refactor all to Clean arch
+
 - Ticket reader using nfc from [here](https://github.com/hepnn/E-talons) 
 

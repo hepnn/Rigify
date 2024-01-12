@@ -215,7 +215,7 @@ List<Stop> searchStops(String text) {
     final int idx =
         unique.indexWhere((u) => u.name == s.name && u.street == s.street);
     if (idx > -1) {
-      unique[idx].id = ',${s.id}' + unique[idx].id!;
+      unique[idx].id = ',${s.id}${unique[idx].id!}';
       continue;
     }
     unique.add(s);

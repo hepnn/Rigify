@@ -1,4 +1,5 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'firebase_remote_config_service.g.dart';
@@ -26,16 +27,13 @@ class FirebaseRemoteConfigService {
       );
       await remoteConfig.fetchAndActivate();
     } on Exception catch (e) {
-      print(
-        'Unable to fetch remote config. Cached or default values will be '
-        'used',
-      );
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
   bool getMapEnabled() {
-    print(remoteConfig.getBool('map_enabled'));
     return remoteConfig.getBool('map_enabled');
   }
 }

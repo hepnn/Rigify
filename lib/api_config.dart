@@ -1,6 +1,5 @@
 class ApiConfig {
-  static const String mapboxPublicToken =
-      'pk.eyJ1IjoiZmp4cyIsImEiOiJjbG56MXZlcGQwMXNnMmlvM3V2bWU5eXRjIn0.L8IMnQbPOW53sbeDPx9R7A';
+  static const String mapboxPublicToken = '';
 
   static const String mapTemplateDark =
       'https://api.mapbox.com/styles/v1/fjxs/clq4bp73m020001p9ggb52arr/tiles/256/{z}/{x}/{y}@2x?access_token=$mapboxPublicToken';
