@@ -11,10 +11,11 @@ GTFS data fetching and converting it into a user friendly UI. Built using Flutte
 
 Developed in motion of not being able to find a good looking and not full of Ads public transit timetable app and deciding to build one on my own.
 
-* This project uses AdMob for showing Banner Ads (Currently only Banner ads are implemented) and Twitter API for fetching user feed for News page implementation. These two are optional and can be easily disabled.
+* This project uses AdMob for showing Banner Ads (Currently only Banner ads are implemented) and scrapes rigassatiksme.lv for their news feed.
 
 - Main data is gotten from a GTFS feed found here [routes](https://saraksti.rigassatiksme.lv/riga/routes.txt) and [stops](https://openmobilitydata-data.s3-us-west-1.amazonaws.com/public/feeds/rigas-satiksme/333/20221105/original/stops.txt).
 - In App Purchases to remove ads are also implemented.
+- Realtime map data is fetched from [here](https://saraksti.rigassatiksme.lv/gps.txt).
 
 While this app is developed for a specific data feed, it can be easily modified and replaced with different GTFS data. A better template is in progress!
 
@@ -26,18 +27,20 @@ While this app is developed for a specific data feed, it can be easily modified 
 - Search bar
 - Favorites - [hive](https://pub.dev/packages/hive)
 - Firebase Analytics & Crashlytics
+- Riverpod
+- Maps
 - Logging
 - Splash screen
 
       
 ## Screenshots
 
-<img align="center" width="250" height="500" src="https://i.imgur.com/rRcC1ee.png">
-<img align="center" width="250" height="500" src="https://i.imgur.com/iKedkMD.png">
-<img align="center" width="250" height="500" src="https://i.imgur.com/Bpy6DAa.png">
+<img align="center" width="250" height="500" src="https://i.imgur.com/5aS7xeA.png">
+<img align="center" width="250" height="500" src="https://i.imgur.com/pi2pnwc.png">
+<img align="center" width="250" height="500" src="https://i.imgur.com/Qzda7KO.png">
 <details>
 <summary>Click for more</summary>
-<img align="center" width="250" height="500" src="https://i.imgur.com/MLcYbVO.png">
+<img align="center" width="250" height="500" src="https://i.imgur.com/ecrtHUf.png">
 <img align="center" width="250" height="500" src="https://i.imgur.com/QVgl376.png">
 <img align="center" width="250" height="500" src="https://i.imgur.com/2FN3ece.png">
 </details>
@@ -68,8 +71,6 @@ To enable fetching from Twitter, add:
 
 `Secret`
 ## Roadmap
-
-- Map that shows routes and stops visually
 
 - More language support
 
