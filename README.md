@@ -17,7 +17,9 @@ Developed in motion of not being able to find a good looking and not full of Ads
 - In App Purchases to remove ads are also implemented.
 - Realtime map data is fetched from [here](https://saraksti.rigassatiksme.lv/gps.txt).
 
-While this app is developed for a specific data feed, it can be easily modified and replaced with different GTFS data. A better template is in progress!
+While this app is developed for a specific data feed, it can be easily modified and replaced with different GTFS data.
+
+Part project is old and part new, so the codebase can be messy
 
 ## Features
 
