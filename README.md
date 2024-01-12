@@ -63,6 +63,10 @@ To enable AdMob, add:
 
 `Ad unit ID for IOS` 
 
+To enable mapbox maps, add:
+
+`Mapbox public token`
+
 To enable fetching from Twitter, add:
 
 `Consumer key`
